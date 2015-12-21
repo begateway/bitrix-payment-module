@@ -31,7 +31,7 @@ try
 	\Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "N"); //Костыль из - за совместимости битрикс с ядром D7
 	$db_orders = CSaleOrder::GetList(
 								array($by => $order),
-								array("PAY_SYSTEM_ID" => $ps_id, "PAYED" => "Y", "%PS_STATUS_DESCRIPTION" => "token"),
+								array("PAY_SYSTEM_ID" => $ps_id, "PAYED" => "Y"),
 								false,
 								false,
 								array("ID", "USER_ID", "DATE_INSERT", "STATUS_ID")

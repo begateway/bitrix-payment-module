@@ -109,7 +109,7 @@ try
 	{
 		$result["user"] = $user["NAME"] ." ". $user["LAST_NAME"];
 	}	
-	
+
 	$result["uids"] = $uids;
 	
 	$tabs = array(
