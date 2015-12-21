@@ -43,7 +43,7 @@ if($arOrder && $webhook->isAuthorized()) {
         "PS_SUM" => $money->getAmount(),
         "PS_CURRENCY" => $webhook->getResponse()->transaction->currency,
         "PS_RESPONSE_DATE" => date("d.m.Y H:i:s", strtotime($webhook->getResponse()->transaction->created_at)),
-		"PS_STATUS_DESCRIPTION" => json_encode(array("uids" => array($webhook->getUid() => $webhook->getResponse()->transaction->type)));
+		"PS_STATUS_DESCRIPTION" => json_encode(array($webhook->getUid() => $webhook->getResponse()->transaction->type));
       );
 
 	  

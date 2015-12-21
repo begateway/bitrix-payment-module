@@ -11,3 +11,5 @@ $MESS["DEVTM_BEGATEWAY_USER_TITLE"] = "Пользователь в систем�
 $MESS["DEVTM_BEGATEWAY_TRANSACTION_TITLE"] = "Транзакции";
 $MESS["DEVTM_BEGATEWAY_TYPE_TITLE"] = "Тип";
 $MESS["DEVTM_BEGATEWAY_UID_TITLE"] = "UID";
+$MESS["DEVTM_BEGATEWAY_REASON_DESC"] = "Возврат денег";
+$MESS["DEVTM_BEGATEWAY_NOTIFY_DESC"] = "Указывайте цену без точки. Например для 543.43 указывается 54343";

@@ -24,65 +24,6 @@ try
 	if( $ID <= 0)
 		throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NOT_CORRECT_ID") );
 	
-	if(
-		$_SERVER["REQUEST_METHOD"] == "POST" &&
-		strlen($refund.$capture.$void) > 0 &&
-		strlen($parent_uid) > 0 &&
-		md5($parent_uid.$ID) === $hash &&
-		check_bitrix_sessid()
-	)
-	{
-		\Bitrix\Main\Loader::includeModule($module_id);
-		\beGateway\Settings::$shopId = (int)\Bitrix\Main\Config\Option::get( $module_id, "shop_id" );;
-		\beGateway\Settings::$shopKey = \Bitrix\Main\Config\Option::get( $module_id, "shop_key" );
-		\beGateway\Settings::$gatewayBase = "https://". \Bitrix\Main\Config\Option::get( $module_id, "domain_gateway" );
-		\beGateway\Settings::$checkoutBase = "https://". \Bitrix\Main\Config\Option::get( $module_id, "domain_payment_page" );
-		
-		if($amount > 0)
-		{
-			if(strlen($refund) > 0)
-			{
-				$query = new \beGateway\Refund();
-				$query->setReason("Возврат денег");
-				echo '1';
-			}
-			else
-				if(strlen($capture) > 0)
-				{
-					$query = new \beGateway\Capture();
-				}
-				else
-					if(strlen($void) > 0)
-					{
-						$query = new \beGateway\Void();
-					}
-				
-			$query->setParentUid($parent_uid);
-			$query->money->setCents($amount);
-			
-			$response = $query->submit()->getResponse();
-			
-			if(isset($response->errors))
-				throw new Exception( $response->message );
-			
-			$order = CSaleOrder::GetList(
-					array(),
-					array("ID" => $ID),
-					false,
-					false,
-					array("ID", "PS_STATUS_DESCRIPTION")
-				  )->Fetch();
-			
-			$ps_desc = json_decode($order["PS_STATUS_DESCRIPTION"], true);
-			if(isset($ps_desc["uids"]))
-				$ps_desc["uids"][$response->transaction->uid] = $response->transaction->type;
-			$fields = array("PS_STATUS_DESCRIPTION" => json_encode($ps_desc));
-			CSaleOrder::Update($ID, $fields);
-		}
-		
-		
-	}
-	
 	$ps_id = (int)\Bitrix\Main\Config\Option::get( $module_id, "payment_system_id" );
 	
 	if( $ps_id <= 0 )
@@ -103,7 +44,56 @@ try
 	if( strlen($order["PS_STATUS_DESCRIPTION"]) <= 0 )
 		throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_TRANSINFO_NOT_FOUND") );
 	
-	$ps_status_desc = json_decode($order["PS_STATUS_DESCRIPTION"], true);
+	$uids = json_decode($order["PS_STATUS_DESCRIPTION"], true);
+	
+	if(
+		$_SERVER["REQUEST_METHOD"] == "POST" &&
+		strlen($refund.$capture.$void) > 0 &&
+		strlen($parent_uid) > 0 &&
+		md5($parent_uid.$ID) === $hash &&
+		check_bitrix_sessid()
+	)
+	{
+		\Bitrix\Main\Loader::includeModule($module_id);
+		\beGateway\Settings::$shopId = (int)\Bitrix\Main\Config\Option::get( $module_id, "shop_id" );;
+		\beGateway\Settings::$shopKey = \Bitrix\Main\Config\Option::get( $module_id, "shop_key" );
+		\beGateway\Settings::$gatewayBase = "https://". \Bitrix\Main\Config\Option::get( $module_id, "domain_gateway" );
+		\beGateway\Settings::$checkoutBase = "https://". \Bitrix\Main\Config\Option::get( $module_id, "domain_payment_page" );
+		
+		if($amount > 0)
+		{
+			if(strlen($refund) > 0)
+			{
+				$query = new \beGateway\Refund();
+				$query->setReason(Loc::getMessage("DEVTM_BEGATEWAY_REASON_DESC"));
+			}
+			else
+				if(strlen($capture) > 0)
+				{
+					$query = new \beGateway\Capture();
+				}
+				else
+					if(strlen($void) > 0)
+					{
+						$query = new \beGateway\Void();
+					}
+				
+			$query->setParentUid($parent_uid);
+			$query->money->setCents($amount);
+			
+			$response = $query->submit()->getResponse();
+			
+			if(isset($response->errors))
+				throw new Exception( $response->message );
+			
+			if(is_array($uids) && !empty($uids))
+				$uids[$response->transaction->uid] = $response->transaction->type;
+			$fields = array("PS_STATUS_DESCRIPTION" => json_encode($uids));
+			CSaleOrder::Update($ID, $fields);
+		}
+		
+		
+	}
 		
 	$result = array();
 	$result["order_id"] = $order["ID"];
@@ -120,7 +110,7 @@ try
 		$result["user"] = $user["NAME"] ." ". $user["LAST_NAME"];
 	}	
 	
-	$result["uids"] = $ps_status_desc["uids"];
+	$result["uids"] = $uids;
 	
 	$tabs = array(
 				  array("DIV" => "edit1", "TAB" => Loc::getMessage("DEVTM_BEGATEWAY_TAB_TITLE"), "ICON"=>"main_user_edit", "TITLE" => Loc::getMessage("DEVTM_BEGATEWAY_TITLE_DESC")),
@@ -205,7 +195,7 @@ try
 	endif;
 ?>
 		<tr>
-			<td width="50%">Указывайте цену без точки. Например для 543.43 указывается 54343</td>
+			<td width="50%"><?= Loc::getMessage("DEVTM_BEGATEWAY_NOTIFY_DESC")?></td>
 		</tr>
 		<input type="hidden" name="parent_uid" value="<?= $parent_uid?>">	
 		<input type="hidden" name="hash" value="<?= md5($parent_uid.$ID)?>">	
