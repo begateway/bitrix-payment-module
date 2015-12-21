@@ -117,7 +117,7 @@ if( $form_type == "inline" || $form_type == "overlay" ):
 	$css = \Bitrix\Main\Config\Option::get( $module_id, "css_form" );
 	$id = "begateway-order-" . $order_id;
 	if( $form_type == "overlay" )
-		echo "<button id=\"$id\" >" . Loc::getMessage("DEVTM_BEGATEWAY_BUY_BUTTON") . "</button>"
+		echo "<button id=\"$id\" >" . Loc::getMessage("DEVTM_BEGATEWAY_BUY_BUTTON") . "</button>";
 	else
 		echo "<div id=\"$id\"></div>";
 ?>
