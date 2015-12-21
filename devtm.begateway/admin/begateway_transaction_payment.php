@@ -173,7 +173,7 @@ try
 	if($has_access === true)
 	{
 ?>
-		<form method="POST" action="<?echo $APPLICATION->GetCurPage()?>" name="post_form">
+		<form method="POST" action="<?echo POST_FORM_ACTION_URI?>" name="post_form">
 			<?echo bitrix_sessid_post()?>
 			<input type="hidden" name="ID" value="<?= $ID?>">
 			<input type="hidden" name="lang" value="<?= LANG?>">
