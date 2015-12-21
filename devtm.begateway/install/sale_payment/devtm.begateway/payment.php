@@ -36,7 +36,7 @@ else
 $notification_url = \Bitrix\Main\Config\Option::get( $module_id, "notification_url" );
 $notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:8443', $notification_url);
 
-$transaction->setNotificationUrl( $notification_url );
+$transaction->setNotificationUrl($notification_url);
 $transaction->setSuccessUrl( \Bitrix\Main\Config\Option::get( $module_id, "success_url" ) );
 $transaction->setFailUrl( \Bitrix\Main\Config\Option::get( $module_id, "fail_url" ) );
 $transaction->setDeclineUrl( \Bitrix\Main\Config\Option::get( $module_id, "fail_url" ) );
@@ -102,7 +102,16 @@ if(!$response->isSuccess())
   die;
 }
 
-$_SESSION["token"] = md5( $USER->GetID() .":". $response->getToken() );
+$description = array( "token" => $response->getToken() );
+	  
+  $arFields = array(
+	"PS_STATUS_DESCRIPTION" => json_encode($description),
+  );
+
+  
+  \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "N"); //Костыль из - за совместимости битрикс с ядром D7
+  CSaleOrder::Update($order_id, $arFields);
+  \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "Y");
 
 $form_type = \Bitrix\Main\Config\Option::get( $module_id, "form_type" );
 
@@ -111,7 +120,7 @@ if( $form_type == "inline" || $form_type == "overlay" ):
 	$css = \Bitrix\Main\Config\Option::get( $module_id, "css_form" );
 	$id = "begateway-order-" . $order_id;
 	if( $form_type == "overlay" )
-		echo "<button id=\"$id\" >" . Loc::getMessage("DEVTM_BEGATEWAY_BUY_BUTTON") . "</button>";
+		echo "<button id=\"$id\" >" . Loc::getMessage("DEVTM_BEGATEWAY_BUY_BUTTON") . "</button>"
 	else
 		echo "<div id=\"$id\"></div>";
 ?>

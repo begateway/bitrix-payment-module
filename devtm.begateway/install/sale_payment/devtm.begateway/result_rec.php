@@ -43,11 +43,30 @@ if($arOrder && $webhook->isAuthorized()) {
         "PS_SUM" => $money->getAmount(),
         "PS_CURRENCY" => $webhook->getResponse()->transaction->currency,
         "PS_RESPONSE_DATE" => date("d.m.Y H:i:s", strtotime($webhook->getResponse()->transaction->created_at)),
-		"PS_STATUS_DESCRIPTION" => json_encode(array("uids" => array($webhook->getUid() => $webhook->getResponse()->transaction->type)));
       );
 
 	  
 	  \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "N"); //Костыль из - за совместимости битрикс с ядром D7
+      
+	  $order = CSaleOrder::GetList(
+					array(),
+					array("ID" => $arOrder["ID"]),
+					false,
+					false,
+					array("ID", "PS_STATUS_DESCRIPTION")
+				  )->Fetch();
+		
+		if($order["ID"] > 0)
+		{
+			$ps_desc = json_decode($order["PS_STATUS_DESCRIPTION"], true);
+			if(isset($ps_desc["token"]))
+			{
+				$ps_desc["uids"][$webhook->getUid()] = $webhook->getResponse()->transaction->type;
+			}
+			
+			$arFields["PS_STATUS_DESCRIPTION"] = json_encode($ps_desc);
+		}
+	  
 	  CSaleOrder::Update($arOrder["ID"], $arFields);
       \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "Y");
      
