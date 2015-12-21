@@ -13,8 +13,9 @@ Loc::loadMessages(__FILE__);
 
 $gr = explode("|", \Bitrix\Main\Config\Option::get( $module_id, "group_ids" ));
 $in = array_intersect($gr,CUser::GetUserGroupArray());
-if(empty($in))
-	$APPLICATION->AuthForm(Loc::getMessage("DIB_AUTH_FORM_MESSAGE"));
+$has_access = false;
+if(!empty($in))
+	$has_access = true;
 
 \Bitrix\Main\Loader::includeModule("sale");
 \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "N"); //Костыль из - за совместимости битрикс с ядром D7
@@ -51,7 +52,8 @@ try
 		strlen($refund.$capture.$void) > 0 &&
 		strlen($parent_uid) > 0 &&
 		md5($parent_uid.$ID) === $hash &&
-		check_bitrix_sessid()
+		check_bitrix_sessid() &&
+		$has_access === true
 	)
 	{
 		\Bitrix\Main\Loader::includeModule($module_id);
@@ -168,39 +170,42 @@ try
 						}
 					}
 	}
+	if($has_access === true)
+	{
 ?>
-	<form method="POST" action="<?echo $APPLICATION->GetCurPage()?>" name="post_form">
-		<?echo bitrix_sessid_post()?>
-		<input type="hidden" name="ID" value="<?= $ID?>">
-		<input type="hidden" name="lang" value="<?= LANG?>">
+		<form method="POST" action="<?echo $APPLICATION->GetCurPage()?>" name="post_form">
+			<?echo bitrix_sessid_post()?>
+			<input type="hidden" name="ID" value="<?= $ID?>">
+			<input type="hidden" name="lang" value="<?= LANG?>">
 <?
-	if( ($parent_uid = array_search("payment", $result["uids"])) !== false ):
+		if( ($parent_uid = array_search("payment", $result["uids"])) !== false ):
 ?>
-		<tr>
-			<td width="40%"><input type="submit" name="refund" value="Refund"></td>
-			<td><input type="text" name="amount" value=""></td>
-		</tr>
+			<tr>
+				<td width="40%"><input type="submit" name="refund" value="Refund"></td>
+				<td><input type="text" name="amount" value=""></td>
+			</tr>
 <?	
-	elseif(($parent_uid = array_search("authorization", $result["uids"])) !== false):
+		elseif(($parent_uid = array_search("authorization", $result["uids"])) !== false):
 ?>
-		<tr>
-			<td width="40%"><input type="submit" name="capture" value="Capture"></td>
-			<td><input type="text" id="order-amount" name="amount" value="<?= $result["amount"]["price"]*100?>"></td>
-		</tr>
-		<tr>
-			<td width="40%"><input type="submit" onClick="document.getElementById('order-amount').value = '<?= $result["amount"]["price"]*100?>'" name="void" value="Void"></td>
-			<td></td>
-		</tr>
+			<tr>
+				<td width="40%"><input type="submit" name="capture" value="Capture"></td>
+				<td><input type="text" id="order-amount" name="amount" value="<?= $result["amount"]["price"]*100?>"></td>
+			</tr>
+			<tr>
+				<td width="40%"><input type="submit" onClick="document.getElementById('order-amount').value = '<?= $result["amount"]["price"]*100?>'" name="void" value="Void"></td>
+				<td></td>
+			</tr>
 <?
-	endif;
+		endif;
 ?>
-		<tr>
-			<td width="50%"><?= Loc::getMessage("DEVTM_BEGATEWAY_NOTIFY_DESC")?></td>
-		</tr>
-		<input type="hidden" name="parent_uid" value="<?= $parent_uid?>">	
-		<input type="hidden" name="hash" value="<?= md5($parent_uid.$ID)?>">	
+			<tr>
+				<td width="50%"><?= Loc::getMessage("DEVTM_BEGATEWAY_NOTIFY_DESC")?></td>
+			</tr>
+			<input type="hidden" name="parent_uid" value="<?= $parent_uid?>">	
+			<input type="hidden" name="hash" value="<?= md5($parent_uid.$ID)?>">	
 <?
-$o_tab->End();
+	}
+	$o_tab->End();
 
 }catch(Exception $e){
 	require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");

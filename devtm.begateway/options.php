@@ -126,13 +126,14 @@ foreach( $all_options as &$option ):
 		$cur_opt_val = Bitrix\Main\Config\Option::get( $module_id, $option[0] );
 ?>
 	<tr>
-		<td width="40%" nowrap <?if($type == "textarea") echo 'class="adm-detail-valign-top"'?>>
+		<td width="40%" <?if($type == "textarea") echo "class=\"adm-detail-valign-top\""?>>
 			<label for="<?echo htmlspecialcharsbx($option[0])?>"><?echo $option[1]?>:</label>
+		</td>
 		<td width="60%">
 			<?if($type == "text"):?>
 				<input type="text" value="<?echo htmlspecialcharsbx($cur_opt_val)?>" name="<?echo htmlspecialcharsbx($option[0])?>">
 			<?elseif($type == "textarea"):?>
-				<textarea name="<?echo htmlspecialcharsbx($option[0])?>"><?echo htmlspecialcharsbx($cur_opt_val)?></textarea>
+				<textarea rows="20" cols="40" name="<?echo htmlspecialcharsbx($option[0])?>"><?echo htmlspecialcharsbx($cur_opt_val)?></textarea>
 			<?elseif($type == "select"):?>
 				<select <?if($option[0] == "group_ids") echo "multiple"?> name="<?= $option[0]?><?if($option[0] == "group_ids") echo "[]"?>">
 				<?foreach($option[3] as $v):?>

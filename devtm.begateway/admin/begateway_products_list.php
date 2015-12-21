@@ -9,11 +9,6 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/$module_id/prolog.php");
 use \Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
-$gr = explode("|", \Bitrix\Main\Config\Option::get( $module_id, "group_ids" ));
-$in = array_intersect($gr,CUser::GetUserGroupArray());
-if(empty($in))
-	$APPLICATION->AuthForm(Loc::getMessage("DIB_AUTH_FORM_MESSAGE"));
-
 \Bitrix\Main\Loader::includeModule("sale");
 
 try
