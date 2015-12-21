@@ -33,7 +33,10 @@ else
   $transaction->setPaymentTransactionType();
 }
 
-$transaction->setNotificationUrl( \Bitrix\Main\Config\Option::get( $module_id, "notification_url" ) );
+$notification_url = \Bitrix\Main\Config\Option::get( $module_id, "notification_url" );
+$notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:8443', $notification_url);
+
+$transaction->setNotificationUrl( $notification_url );
 $transaction->setSuccessUrl( \Bitrix\Main\Config\Option::get( $module_id, "success_url" ) );
 $transaction->setFailUrl( \Bitrix\Main\Config\Option::get( $module_id, "fail_url" ) );
 $transaction->setDeclineUrl( \Bitrix\Main\Config\Option::get( $module_id, "fail_url" ) );
