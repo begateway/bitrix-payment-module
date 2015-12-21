@@ -99,16 +99,7 @@ if(!$response->isSuccess())
   die;
 }
 
-$description = array( "token" => $response->getToken() );
-	  
-  $arFields = array(
-	"PS_STATUS_DESCRIPTION" => json_encode($description),
-  );
-
-  
-  \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "N"); //Костыль из - за совместимости битрикс с ядром D7
-  CSaleOrder::Update($order_id, $arFields);
-  \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "Y");
+$_SESSION["token"] = md5( $USER->GetID() .":". $response->getToken() );
 
 $form_type = \Bitrix\Main\Config\Option::get( $module_id, "form_type" );
 

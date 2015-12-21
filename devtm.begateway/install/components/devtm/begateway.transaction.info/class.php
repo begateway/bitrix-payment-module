@@ -18,21 +18,10 @@ class beTransInfoComponent extends CBitrixComponent
 		if( strlen( $this->arParams["TOKEN"] ) != 64)
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_WRONG_TOKEN_LONG") );	
 	
-		\Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "N"); //Костыль из - за совместимости битрикс с ядром D7
-		$order = CSaleOrder::GetList(
-					array(),
-					array(
-						"USER_ID" => $USER->GetID(),
-						"%PS_STATUS_DESCRIPTION" => $this->arParams["TOKEN"]
-					),
-					false,
-					false,
-					array("ID", "PS_STATUS_DESCRIPTION")
-				)->Fetch();
-		\Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "Y");
-		
-		if( $order["ID"] <= 0 )
+		if( md5( $USER->GetID() .":". $this->arParams["TOKEN"] ) != $_SESSION["token"])	
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TOKEN_ACCESS") );
+		
+		unset( $_SESSION["token"] );
 	}
 	
 	protected function floatAmount( $amount )
