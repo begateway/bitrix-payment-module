@@ -146,7 +146,7 @@ foreach( $all_options as &$option ):
 <?endforeach?>
 <?$o_tab->Buttons();?>
 	<input type="submit" name="save" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_SAVE_BTN_NAME")?>" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_SAVE_BTN_NAME")?>" class="adm-btn-save">
-	<input type="submit" name="reset" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>" OnClick="return confirm('<?echo AddSlashes(Loc::getMessage("MAIN_HINT_RESTORE_DEFAULTS_WARNING"))?>')" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>">
+	<input type="submit" name="reset" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>" OnClick="return confirm('<?echo AddSlashes(Loc::getMessage("DEVTM_BEGATEWAY_RESTORE_WARNING"))?>')" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>">
 	<?=bitrix_sessid_post();?>
 <?$o_tab->End();?>
 </form>
