@@ -85,7 +85,7 @@ if( $REQUEST_METHOD == "POST" && strlen( $save . $reset ) > 0 && check_bitrix_se
 		{
 			if( isset( $_REQUEST[$option[0]] ) )
 			{
-				if( ( $option[2] == "text" || $option[2] == "textarea" ) && strlen( $_REQUEST[$option[0]] ) > 0 )
+				if( ( $option[2] == "text" || $option[2] == "textarea" ) )
 					\Bitrix\Main\Config\Option::set( $module_id, $option[0], $_REQUEST[$option[0]] );
 				else
 					if( $option[2] == "select" )
