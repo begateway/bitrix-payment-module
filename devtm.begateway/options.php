@@ -109,7 +109,7 @@ if( $REQUEST_METHOD == "POST" && strlen( $save . $reset ) > 0 && check_bitrix_se
 		
 	}
 	
-	LocalRedirect($APPLICATION->GetCurPage()."?mid=".urlencode($module_id)."&lang=".urlencode(LANGUAGE_ID)."&back_url_settings=".urlencode($_REQUEST["back_url_settings"])."&".$o_tab->ActiveTabParam());
+	LocalRedirect($APPLICATION->GetCurPage()."?mid=".urlencode($module_id)."&lang=".urlencode(LANGUAGE_ID)."&".$o_tab->ActiveTabParam());
 }
 
 $o_tab->Begin();
@@ -146,10 +146,6 @@ foreach( $all_options as &$option ):
 <?endforeach?>
 <?$o_tab->Buttons();?>
 	<input type="submit" name="save" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_SAVE_BTN_NAME")?>" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_SAVE_BTN_NAME")?>" class="adm-btn-save">
-	<?if(strlen($_REQUEST["back_url_settings"])>0):?>
-		<input type="button" name="ñancel" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_CANCEL_BTN_NAME")?>" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_CANCEL_BTN_NAME")?>" onclick="window.location='<?echo htmlspecialcharsbx(CUtil::addslashes($_REQUEST["back_url_settings"]))?>'">
-		<input type="hidden" name="back_url_settings" value="<?=htmlspecialcharsbx($_REQUEST["back_url_settings"])?>">
-	<?endif?>
 	<input type="submit" name="reset" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>" OnClick="return confirm('<?echo AddSlashes(Loc::getMessage("MAIN_HINT_RESTORE_DEFAULTS_WARNING"))?>')" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>">
 	<?=bitrix_sessid_post();?>
 <?$o_tab->End();?>
