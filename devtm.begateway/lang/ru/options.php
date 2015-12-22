@@ -21,4 +21,5 @@ $MESS["DEVTM_BEGATEWAY_SAVE_BTN_NAME"] = "Сохранить";
 $MESS["DEVTM_BEGATEWAY_RESET_BTN_NAME"] = "Сбросить";
 $MESS["DEVTM_BEGATEWAY_RESET_DEFAULTS_WARNING"] = "Установить настройки по-умолчанию ?";
 $MESS["DEVTM_BEGATEWAY_PAYMENT_SYSTEM_DESC"] = "Выберите систему оплаты";
-$MESS["DEVTM_BEGATEWAY_GROUPS_DESC"] = "Выберите группу пользователей, которым будет доступено управление транзакциями";
+$MESS["DEVTM_BEGATEWAY_GROUPS_DESC"] = "Выберите группу пользователей, которым будет доступно управление транзакциями";
+$MESS["DEVTM_BEGATEWAY_RESTORE_WARNING"] = "Текущие значения будут удалены";
