@@ -18,7 +18,6 @@ $MESS["DEVTM_BEGATEWAY_FORM_TYPE_OVERLAY_NAME"] = "Всплывающая";
 $MESS["DEVTM_BEGATEWAY_TAB_NAME"] = "Настройка модуля оплаты beGateway";
 $MESS["DEVTM_BEGATEWAY_TAB_DESC"] = "Страница настройки модуля";
 $MESS["DEVTM_BEGATEWAY_SAVE_BTN_NAME"] = "Сохранить";
-$MESS["DEVTM_BEGATEWAY_CANCEL_BTN_NAME"] = "Отмена";
 $MESS["DEVTM_BEGATEWAY_RESET_BTN_NAME"] = "Сбросить";
 $MESS["DEVTM_BEGATEWAY_RESET_DEFAULTS_WARNING"] = "Установить настройки по-умолчанию ?";
 $MESS["DEVTM_BEGATEWAY_PAYMENT_SYSTEM_DESC"] = "Выберите систему оплаты";
