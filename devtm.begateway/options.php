@@ -78,7 +78,7 @@ $o_tab = new CAdminTabControl("beGatewayTabControl", $tabs);
 if( $REQUEST_METHOD == "POST" && strlen( $save . $reset ) > 0 && check_bitrix_sessid() )
 {
 	if( strlen($reset) > 0 )
-		\Bitrix\Main\Config\Option::delete( $module_id, array() );
+		\Bitrix\Main\Config\Option::delete( $module_id );
 	else
 	{
 		foreach( $all_options as &$option )
@@ -147,7 +147,7 @@ foreach( $all_options as &$option ):
 <?$o_tab->Buttons();?>
 	<input type="submit" name="save" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_SAVE_BTN_NAME")?>" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_SAVE_BTN_NAME")?>" class="adm-btn-save">
 	<?if(strlen($_REQUEST["back_url_settings"])>0):?>
-		<input type="button" name="ñancel" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_CANCEL_BTN_NAME")?>" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_CANCEL_BTN_NAME")?>" onclick="window.location='<?echo htmlspecialcharsbx(CUtil::addslashes($_REQUEST["back_url_settings"]))?>'">
+		<input type="button" name="Ã±ancel" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_CANCEL_BTN_NAME")?>" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_CANCEL_BTN_NAME")?>" onclick="window.location='<?echo htmlspecialcharsbx(CUtil::addslashes($_REQUEST["back_url_settings"]))?>'">
 		<input type="hidden" name="back_url_settings" value="<?=htmlspecialcharsbx($_REQUEST["back_url_settings"])?>">
 	<?endif?>
 	<input type="submit" name="reset" title="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>" OnClick="return confirm('<?echo AddSlashes(Loc::getMessage("MAIN_HINT_RESTORE_DEFAULTS_WARNING"))?>')" value="<?= Loc::getMessage("DEVTM_BEGATEWAY_RESET_BTN_NAME")?>">
