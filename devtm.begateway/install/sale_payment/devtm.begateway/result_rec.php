@@ -10,7 +10,6 @@ Loc::loadMessages(__FILE__);
 \beGateway\Settings::$gatewayBase = "https://". \Bitrix\Main\Config\Option::get( $module_id, "domain_gateway" );
 \beGateway\Settings::$checkoutBase = "https://". \Bitrix\Main\Config\Option::get( $module_id, "domain_payment_page" );
 
-
 $webhook = new \beGateway\Webhook;
 
 list($site_id, $tracking_id) = explode('_', $webhook->getTrackingId());
@@ -26,13 +25,13 @@ if($arOrder && $webhook->isAuthorized()) {
       CSaleOrder::StatusOrder($arOrder["ID"], "P");
 
       $message = array();
-      if( isset( $webhook->getResponse()->transaction->three_d_secure_verification ) ) 
+      if( isset( $webhook->getResponse()->transaction->three_d_secure_verification ) )
 	  {
         $message[] = "3-D Secure: " .$webhook->getResponse()->transaction->three_d_secure_verification->pa_status;
       }
 
 	  $message[] = $webhook->getResponse()->transaction->description;
-	  
+
       $money = new \beGateway\Money;
       $money->setCurrency($webhook->getResponse()->transaction->currency);
       $money->setCents($webhook->getResponse()->transaction->amount);
@@ -43,17 +42,15 @@ if($arOrder && $webhook->isAuthorized()) {
         "PS_SUM" => $money->getAmount(),
         "PS_CURRENCY" => $webhook->getResponse()->transaction->currency,
         "PS_RESPONSE_DATE" => date("d.m.Y H:i:s", strtotime($webhook->getResponse()->transaction->created_at)),
-		"PS_STATUS_DESCRIPTION" => json_encode(array($webhook->getUid() => $webhook->getResponse()->transaction->type))
+    		"PS_STATUS_DESCRIPTION" => json_encode(array($webhook->getUid() => $webhook->getResponse()->transaction->type))
       );
 
-	  
 	  \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "N"); //Костыль из - за совместимости битрикс с ядром D7
 	  CSaleOrder::Update($arOrder["ID"], $arFields);
-      \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "Y");
-     
-      echo "OK " .$webhook->getUid(); 
+    \Bitrix\Main\Config\Option::set("main", "~sale_converted_15", "Y");
   }
 }
 $APPLICATION->RestartBuffer();
+echo "OK " .$webhook->getUid();
 die;
 ?>

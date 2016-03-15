@@ -1,5 +1,5 @@
 <?
-$MESS["DEVTM_BEGATEWAY_SUCCESS_TITLE"] = "ТРАНЗАКЦИЯ ПРОШЛА УСПЕШНО";
+$MESS["DEVTM_BEGATEWAY_SUCCESS_TITLE"] = "ОПЛАТА ПРОШЛА УСПЕШНО";
 $MESS["DEVTM_BEGATEWAY_SUCCESS_ORDER_DESC"] = "Описание:";
 $MESS["DEVTM_BEGATEWAY_SUCCESS_AMOUNT"] = "Сумма:";
 $MESS["DEVTM_BEGATEWAY_SUCCESS_UID"] = "UID транзакции:";
