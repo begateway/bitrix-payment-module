@@ -27,8 +27,8 @@ $transaction->setLanguage(LANGUAGE_ID);
 if( \Bitrix\Main\Config\Option::get( $module_id, "transaction_type" ) == "authorization" )
 {
   $transaction->setAuthorizationTransactionType();
-} 
-else 
+}
+else
 {
   $transaction->setPaymentTransactionType();
 }
@@ -52,7 +52,7 @@ if( \Bitrix\Main\Loader::includeModule( "sale" ) )
 	$db_prop_order_vals = CSaleOrderPropsValue::GetList(
 								array("SORT" => "ASC"),
 								array(
-									"ORDER_ID" => $order_id, 
+									"ORDER_ID" => $order_id,
 									"CODE" => array(
 												"CITY",
 												"ZIP",
@@ -107,7 +107,13 @@ $_SESSION["token"] = md5( $USER->GetID() .":". $response->getToken() );
 $form_type = \Bitrix\Main\Config\Option::get( $module_id, "form_type" );
 
 if( $form_type == "inline" || $form_type == "overlay" ):
-	$GLOBALS["APPLICATION"]->AddHeadScript( "/bitrix/php_interface/include/sale_payment/devtm.begateway/begateway.min.js" );
+
+  $domain_gateway = \Bitrix\Main\Config\Option::get($module_id, 'domain_gateway');
+  list($subdomain,$jsdomain) = explode('.', $domain_gateway, 2);
+
+  $jsurl = 'https://js.' . $jsdomain . '/begateway-1-latest.min.js';
+
+	$GLOBALS["APPLICATION"]->AddHeadScript( $jsurl );
 	$css = \Bitrix\Main\Config\Option::get( $module_id, "css_form" );
 	$id = "begateway-order-" . $order_id;
 	if( $form_type == "overlay" )
