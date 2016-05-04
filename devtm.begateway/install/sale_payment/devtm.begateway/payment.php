@@ -108,7 +108,7 @@ $form_type = \Bitrix\Main\Config\Option::get( $module_id, "form_type" );
 
 if( $form_type == "inline" || $form_type == "overlay" ):
 
-  $domain_gateway = \Bitrix\Main\Config\Option::get('domain_gateway');
+  $domain_gateway = \Bitrix\Main\Config\Option::get($module_id, 'domain_gateway');
   list($subdomain,$jsdomain) = explode('.', $domain_gateway, 2);
 
   $jsurl = 'https://js.' . $jsdomain . '/begateway-1-latest.min.js';

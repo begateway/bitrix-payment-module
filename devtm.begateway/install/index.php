@@ -17,7 +17,7 @@ class devtm_beGateway extends CModule
 	public $MODULE_NAME;
 	public $MODULE_DESCRIPTION;
 	public $MODULE_GROUP_RIGHTS = "N";
-	
+
 	public $namespaceFolder = "devtm";
 
     function __construct()
@@ -36,8 +36,9 @@ class devtm_beGateway extends CModule
 
 		$this->MODULE_NAME = Loc::getMessage("DEVTM_BEGATEWAY_MODULE_NAME");
 		$this->MODULE_DESCRIPTION = Loc::getMessage("DEVTM_BEGATEWAY_MODULE_NAME");
+    $this->PARTNER_NAME = "eComCharge";
 	}
-	
+
     public function DoInstall()
     {
 		$this->installFiles();
@@ -52,7 +53,7 @@ class devtm_beGateway extends CModule
         \Bitrix\Main\ModuleManager::unRegisterModule($this->MODULE_ID);
 		return true;
     }
-	
+
     public function installFiles()
     {
 		CopyDirFiles(
@@ -61,12 +62,12 @@ class devtm_beGateway extends CModule
             true, true
         );
 		CopyDirFiles(
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/components/", 
+			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/components/",
 			$_SERVER["DOCUMENT_ROOT"]."/bitrix/components/",
 			true, true
 		);
 		CopyDirFiles(
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/admin/", 
+			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/admin/",
 			$_SERVER["DOCUMENT_ROOT"]."/bitrix/admin",
 			true, true
 		);
@@ -75,7 +76,7 @@ class devtm_beGateway extends CModule
 
     public function uninstallFiles()
     {
-		
+
 		DeleteDirFilesEx("/bitrix/components/".$this->namespaceFolder);
 		DeleteDirFilesEx("/bitrix/php_interface/include/sale_payment/devtm.begateway");
 		DeleteDirFiles(
