@@ -15,11 +15,15 @@ class beTransInfoComponent extends CBitrixComponent
 		)
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TRANS_INFO") );
 
-		if( strlen( $this->arParams["TOKEN"] ) != 64)
+    $token = $_REQUEST['token'];
+
+		if( strlen($token) != 64)
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_WRONG_TOKEN_LONG") );
 
-		if( md5( $USER->GetID() .":". $this->arParams["TOKEN"] ) != $_SESSION["token"])
+		if( md5( $USER->GetID() .":". $token ) != $_SESSION["token"])
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TOKEN_ACCESS") );
+
+    return $token;
 	}
 
 	public function executeComponent()
@@ -27,7 +31,7 @@ class beTransInfoComponent extends CBitrixComponent
 		global $APPLICATION;
 		try
 		{
-			$this->checkToken();
+			$token = $this->checkToken();
 
 			\beGateway\Settings::$shopId = (int)\Bitrix\Main\Config\Option::get( $this->module_id, "shop_id" );;
 			\beGateway\Settings::$shopKey = \Bitrix\Main\Config\Option::get( $this->module_id, "shop_key" );
@@ -35,13 +39,16 @@ class beTransInfoComponent extends CBitrixComponent
 			\beGateway\Settings::$checkoutBase = "https://". \Bitrix\Main\Config\Option::get( $this->module_id, "domain_payment_page" );
 
 			$query = new \beGateway\QueryByToken();
-			$query->setToken($this->arParams["TOKEN"]);
+			$query->setToken($token);
 			$response = $query->submit()->getResponse();
 
 			if( ! isset( $response->checkout ) )
 				throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_FAIL_TOKEN_QUERY") );
+      $money = new \beGateway\Money;
+      $money->setCents($response->checkout->order->amount);
+      $money->setCurrency($response->checkout->order->currency);
 
-			$response->checkout->order->amount = CCurrencyLang::CurrencyFormat( $response->checkout->order->amount, $response->checkout->order->currency );
+			$response->checkout->order->amount = CCurrencyLang::CurrencyFormat( $money->getAmount(), $money->getCurrency() );
 
 			$this->arResult = $response->checkout;
 
