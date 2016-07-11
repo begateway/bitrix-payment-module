@@ -3,7 +3,7 @@
 ## Установка модуля
 
   * Создайте резервную копию вашего магазина и базы данных
-  * Скачайте архив модуля [bitrix-begateway.zip](https://github.com/beGateway/bitrix-payment-module/raw/master/bitrix-begateway.zip)
+  * Скачайте архив модуля [bitrix-begateway.zip](https://github.com/beGateway/bitrix-payment-module/raw/master/bitrix-begateway.zip) или [bitrix-begateway-windows-1251.zip](https://github.com/beGateway/bitrix-payment-module/raw/master/bitrix-begateway-windows-1251.zip), если у вас 1С-Битрикс запущен в кодировке Windows-1251
   * Распакуйте архив и скопируйте каталог `devtm.begateway` в каталог
   `<1C-Bitrix/bitrix/modules/`
   * Зайдите в зону 1C-Битрикс администратора и выберите меню
