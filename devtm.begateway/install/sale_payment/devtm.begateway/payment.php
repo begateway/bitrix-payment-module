@@ -139,8 +139,8 @@ if( $form_type == "inline" || $form_type == "overlay" ):
 		pf.buildForm();
 	</script>
 <?else:?>
-<form method="GET" action="<?=\beGateway\Settings::$checkoutBase . "/checkout";?>">
-  <input type="hidden" value="<?=$response->getToken();?>" name="token">
+<form method="GET" action="<?= $response->getRedirectUrlScriptName();?>">
+  <input type="hidden" value="<?= $response->getToken();?>" name="token">
   <input type="submit" value="<?=Loc::getMessage("DEVTM_BEGATEWAY_BUY_BUTTON")?>">
 </form>
 <?endif?>
