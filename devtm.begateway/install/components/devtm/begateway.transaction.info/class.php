@@ -52,6 +52,9 @@ class beTransInfoComponent extends CBitrixComponent
 
 			$this->arResult = $response->checkout;
 
+      $arResult->order->description = \beGateway\Utf8::to($arResult->order->description);
+      $arResult->gateway_response->$type->billing_descriptor = \beGateway\Utf8::to($arResult->gateway_response->$type->billing_descriptor);
+
 			$this->IncludeComponentTemplate();
 
 		}catch(Exception $e){
