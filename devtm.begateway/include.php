@@ -24,6 +24,7 @@ $classes = array(
 				"\beGateway\ResponseCardToken" => "lib/ResponseCardToken.php",
 				"\beGateway\ResponseCheckout" => "lib/ResponseCheckout.php",
 				"\beGateway\Settings" => "lib/Settings.php",
+				"\beGateway\Utf8" => "lib/Utf8.php",
 				"\beGateway\Void" => "lib/Void.php",
 				"\beGateway\Webhook" => "lib/Webhook.php",
 		   );

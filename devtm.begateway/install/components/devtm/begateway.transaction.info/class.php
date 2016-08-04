@@ -51,6 +51,10 @@ class beTransInfoComponent extends CBitrixComponent
 			$response->checkout->order->amount = CCurrencyLang::CurrencyFormat( $money->getAmount(), $money->getCurrency() );
 
 			$this->arResult = $response->checkout;
+      $type = $this->arResult->transaction_type;
+
+      $this->arResult->order->description = \beGateway\Utf8::to($this->arResult->order->description);
+      $this->arResult->gateway_response->$type->billing_descriptor = \beGateway\Utf8::to($this->arResult->gateway_response->$type->billing_descriptor);
 
 			$this->IncludeComponentTemplate();
 

@@ -6,6 +6,11 @@ if( ! \Bitrix\Main\Loader::includeModule($module_id) || ! $GLOBALS["USER"]->IsAu
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
+if (!function_exists('mb_convert_encoding')) {
+  ShowMessage('Enabe mb_convert_encoding');
+  die;
+}
+
 \beGateway\Settings::$shopId = (int)\Bitrix\Main\Config\Option::get( $module_id, "shop_id" );
 \beGateway\Settings::$shopKey = \Bitrix\Main\Config\Option::get( $module_id, "shop_key" );
 \beGateway\Settings::$gatewayBase = "https://". \Bitrix\Main\Config\Option::get( $module_id, "domain_gateway" );
@@ -21,7 +26,7 @@ $transaction = new \beGateway\GetPaymentToken;
 $transaction->money->setCurrency($currency);
 $transaction->money->setAmount($out_summ);
 $transaction->setTrackingId(SITE_ID . "_" . $order_id);
-$transaction->setDescription(Loc::getMessage("DEVTM_BEGATEWAY_ORDER_TITLE") . " #" .$order_id);
+$transaction->setDescription(\beGateway\Utf8::from(Loc::getMessage("DEVTM_BEGATEWAY_ORDER_TITLE") . " #" .$order_id));
 $transaction->setLanguage(LANGUAGE_ID);
 
 if( \Bitrix\Main\Config\Option::get( $module_id, "transaction_type" ) == "authorization" )
@@ -82,15 +87,15 @@ if( \Bitrix\Main\Loader::includeModule( "sale" ) )
 //$state = ;
 
 
-if ($firtName) $transaction->customer->setFirstName($firstName);
-if ($lastName) $transaction->customer->setLastName($lastName);
-if ($address)  $transaction->customer->setAddress($address);
-if ($city)     $transaction->customer->setCity($city);
-if ($zip)      $transaction->customer->setZip($zip);
-if ($email)    $transaction->customer->setEmail($email);
-if ($phone)    $transaction->customer->setPhone($phone);
-if ($state)    $transaction->customer->setState($state);
-if ($country)  $transaction->customer->setCountry($country);
+if ($firtName) $transaction->customer->setFirstName(\beGateway\Utf8::from($firstName));
+if ($lastName) $transaction->customer->setLastName(\beGateway\Utf8::from($lastName));
+if ($address)  $transaction->customer->setAddress(\beGateway\Utf8::from($address));
+if ($city)     $transaction->customer->setCity(\beGateway\Utf8::from($city));
+if ($zip)      $transaction->customer->setZip(\beGateway\Utf8::from($zip));
+if ($email)    $transaction->customer->setEmail(\beGateway\Utf8::from($email));
+if ($phone)    $transaction->customer->setPhone(\beGateway\Utf8::from($phone));
+if ($state)    $transaction->customer->setState(\beGateway\Utf8::from($state));
+if ($country)  $transaction->customer->setCountry(\beGateway\Utf8::from($country));
 
 $transaction->setAddressHidden();
 
@@ -134,8 +139,8 @@ if( $form_type == "inline" || $form_type == "overlay" ):
 		pf.buildForm();
 	</script>
 <?else:?>
-<form method="GET" action="<?=\beGateway\Settings::$checkoutBase . "/checkout";?>">
-  <input type="hidden" value="<?=$response->getToken();?>" name="token">
+<form method="GET" action="<?= $response->getRedirectUrlScriptName();?>">
+  <input type="hidden" value="<?= $response->getToken();?>" name="token">
   <input type="submit" value="<?=Loc::getMessage("DEVTM_BEGATEWAY_BUY_BUTTON")?>">
 </form>
 <?endif?>
