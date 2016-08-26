@@ -20,7 +20,7 @@ class beTransInfoComponent extends CBitrixComponent
 		if( strlen($token) != 64)
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_WRONG_TOKEN_LONG") );
 
-		if( md5( $USER->GetID() .":". $token ) != $_SESSION["token"])
+		if( md5($token) != $_SESSION["token"])
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TOKEN_ACCESS") );
 
     return $token;
@@ -53,8 +53,8 @@ class beTransInfoComponent extends CBitrixComponent
 			$this->arResult = $response->checkout;
       $type = $this->arResult->transaction_type;
 
-      $this->arResult->order->description = \beGateway\Utf8::to($this->arResult->order->description);
-      $this->arResult->gateway_response->$type->billing_descriptor = \beGateway\Utf8::to($this->arResult->gateway_response->$type->billing_descriptor);
+      $this->arResult->order->description = \beGateway\Utf8::to($this->arResult->order->description, LANG_CHARSET);
+      $this->arResult->gateway_response->$type->billing_descriptor = \beGateway\Utf8::to($this->arResult->gateway_response->$type->billing_descriptor, LANG_CHARSET);
 
 			$this->IncludeComponentTemplate();
 
