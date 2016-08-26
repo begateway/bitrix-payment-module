@@ -26,7 +26,7 @@ $transaction = new \beGateway\GetPaymentToken;
 $transaction->money->setCurrency($currency);
 $transaction->money->setAmount($out_summ);
 $transaction->setTrackingId(SITE_ID . "_" . $order_id);
-$transaction->setDescription(\beGateway\Utf8::from(Loc::getMessage("DEVTM_BEGATEWAY_ORDER_TITLE") . " #" .$order_id));
+$transaction->setDescription(\beGateway\Utf8::from(Loc::getMessage("DEVTM_BEGATEWAY_ORDER_TITLE") . " #" .$order_id, LANG_CHARSET));
 $transaction->setLanguage(LANGUAGE_ID);
 
 if( \Bitrix\Main\Config\Option::get( $module_id, "transaction_type" ) == "authorization" )
@@ -87,15 +87,15 @@ if( \Bitrix\Main\Loader::includeModule( "sale" ) )
 //$state = ;
 
 
-if ($firtName) $transaction->customer->setFirstName(\beGateway\Utf8::from($firstName));
-if ($lastName) $transaction->customer->setLastName(\beGateway\Utf8::from($lastName));
-if ($address)  $transaction->customer->setAddress(\beGateway\Utf8::from($address));
-if ($city)     $transaction->customer->setCity(\beGateway\Utf8::from($city));
-if ($zip)      $transaction->customer->setZip(\beGateway\Utf8::from($zip));
-if ($email)    $transaction->customer->setEmail(\beGateway\Utf8::from($email));
-if ($phone)    $transaction->customer->setPhone(\beGateway\Utf8::from($phone));
-if ($state)    $transaction->customer->setState(\beGateway\Utf8::from($state));
-if ($country)  $transaction->customer->setCountry(\beGateway\Utf8::from($country));
+if ($firtName) $transaction->customer->setFirstName(\beGateway\Utf8::from($firstName), LANG_CHARSET);
+if ($lastName) $transaction->customer->setLastName(\beGateway\Utf8::from($lastName), LANG_CHARSET);
+if ($address)  $transaction->customer->setAddress(\beGateway\Utf8::from($address), LANG_CHARSET);
+if ($city)     $transaction->customer->setCity(\beGateway\Utf8::from($city), LANG_CHARSET);
+if ($zip)      $transaction->customer->setZip(\beGateway\Utf8::from($zip), LANG_CHARSET);
+if ($email)    $transaction->customer->setEmail(\beGateway\Utf8::from($email), LANG_CHARSET);
+if ($phone)    $transaction->customer->setPhone(\beGateway\Utf8::from($phone), LANG_CHARSET);
+if ($state)    $transaction->customer->setState(\beGateway\Utf8::from($state), LANG_CHARSET);
+if ($country)  $transaction->customer->setCountry(\beGateway\Utf8::from($country), LANG_CHARSET);
 
 $transaction->setAddressHidden();
 
@@ -107,7 +107,7 @@ if(!$response->isSuccess())
   die;
 }
 
-$_SESSION["token"] = md5( $USER->GetID() .":". $response->getToken() );
+$_SESSION["token"] = md5($response->getToken());
 
 $form_type = \Bitrix\Main\Config\Option::get( $module_id, "form_type" );
 
