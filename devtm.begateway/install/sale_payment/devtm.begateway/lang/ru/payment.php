@@ -1,4 +1,0 @@
-<?
-$MESS["DEVTM_BEGATEWAY_ORDER_TITLE"] = "Заказ";
-$MESS["DEVTM_BEGATEWAY_GET_TOKEN_ERROR"] = "Ошибка получения token: ";
-$MESS["DEVTM_BEGATEWAY_BUY_BUTTON"] = "Оплата";
