@@ -87,15 +87,15 @@ if( \Bitrix\Main\Loader::includeModule( "sale" ) )
 //$state = ;
 
 
-if ($firtName) $transaction->customer->setFirstName(\beGateway\Utf8::from($firstName), LANG_CHARSET);
-if ($lastName) $transaction->customer->setLastName(\beGateway\Utf8::from($lastName), LANG_CHARSET);
-if ($address)  $transaction->customer->setAddress(\beGateway\Utf8::from($address), LANG_CHARSET);
-if ($city)     $transaction->customer->setCity(\beGateway\Utf8::from($city), LANG_CHARSET);
-if ($zip)      $transaction->customer->setZip(\beGateway\Utf8::from($zip), LANG_CHARSET);
-if ($email)    $transaction->customer->setEmail(\beGateway\Utf8::from($email), LANG_CHARSET);
-if ($phone)    $transaction->customer->setPhone(\beGateway\Utf8::from($phone), LANG_CHARSET);
-if ($state)    $transaction->customer->setState(\beGateway\Utf8::from($state), LANG_CHARSET);
-if ($country)  $transaction->customer->setCountry(\beGateway\Utf8::from($country), LANG_CHARSET);
+if ($firtName) $transaction->customer->setFirstName(\beGateway\Utf8::from($firstName, LANG_CHARSET));
+if ($lastName) $transaction->customer->setLastName(\beGateway\Utf8::from($lastName, LANG_CHARSET));
+if ($address)  $transaction->customer->setAddress(\beGateway\Utf8::from($address, LANG_CHARSET));
+if ($city)     $transaction->customer->setCity(\beGateway\Utf8::from($city, LANG_CHARSET));
+if ($zip)      $transaction->customer->setZip(\beGateway\Utf8::from($zip, LANG_CHARSET));
+if ($email)    $transaction->customer->setEmail(\beGateway\Utf8::from($email, LANG_CHARSET));
+if ($phone)    $transaction->customer->setPhone(\beGateway\Utf8::from($phone, LANG_CHARSET));
+if ($state)    $transaction->customer->setState(\beGateway\Utf8::from($state, LANG_CHARSET));
+if ($country)  $transaction->customer->setCountry(\beGateway\Utf8::from($country, LANG_CHARSET));
 
 $transaction->setAddressHidden();
 
