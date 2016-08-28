@@ -4,11 +4,6 @@ require_once dirname(__FILE__) . '/common.php';
 
 Loc::loadMessages(__FILE__);
 
-if (!function_exists('mb_convert_encoding')) {
-  ShowMessage(Loc::getMessage("SALE_BEGATEWAY_MB_CONVERT_ENCODING_ERROR"));
-  die;
-}
-
 \beGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
 \beGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
 \beGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
