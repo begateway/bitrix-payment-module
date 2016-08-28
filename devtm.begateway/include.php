@@ -28,5 +28,5 @@ $classes = array(
   "\beGateway\Void" => "$lib_path/Void.php",
   "\beGateway\Webhook" => "$lib_path/Webhook.php"
  );
-error_log(print_r($classes,true));
+ 
 CModule::AddAutoloadClasses("", $classes);

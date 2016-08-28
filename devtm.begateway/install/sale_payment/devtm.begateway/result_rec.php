@@ -10,7 +10,7 @@ Loc::loadMessages(__FILE__);
 
 $webhook = new \beGateway\Webhook;
 
-list($site_id, $order_id, $payment_id) = explode('_', $webhook->getTrackingId());
+list($site_id, $order_id, $payment_id) = explode(':', $webhook->getTrackingId());
 
 $order = Order::load($order_id);
 
@@ -40,37 +40,32 @@ if (!$webhook->isAuthorized()) {
   _output_message('ERROR: WEBHOOK IS NOT AUTHORIZED');
 }
 
-CSaleOrder::PayOrder($arOrder["ID"], "Y");
-CSaleOrder::StatusOrder($arOrder["ID"], "P");
-
-$message = array();
-if(isset($webhook->getResponse()->transaction->three_d_secure_verification)) {
-  $message[] = "3-D Secure: " .$webhook->getResponse()->transaction->three_d_secure_verification->pa_status;
-}
-
-$message[] = $webhook->getResponse()->transaction->description;
-
 $money = new \beGateway\Money;
 $money->setCurrency($webhook->getResponse()->transaction->currency);
 $money->setCents($webhook->getResponse()->transaction->amount);
 
+$message = array();
+$message []= Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_UID") . ' ' . $webhook->getUid(). ". " . Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_TIME") . ' ' . $webhook->getResponse()->transaction->paid_at;
+
+if(isset($webhook->getResponse()->transaction->three_d_secure_verification->pa_status)) {
+  $message[] = "3-D Secure: " .$webhook->getResponse()->transaction->three_d_secure_verification->pa_status;
+}
+
 $arFields = array(
   "PS_STATUS" => ($webhook->isSuccess() ? "Y" : "N"),
-  "PS_STATUS_MESSAGE" => implode("\n",$message),
+  "PS_STATUS_DESCRIPTION" => implode("\n",$message),
   "PS_SUM" => $money->getAmount(),
   "PS_CURRENCY" => $money->getCurrency(),
   "PS_RESPONSE_DATE" => new \Bitrix\Main\Type\DateTime(),
-  "PS_STATUS_DESCRIPTION" => json_encode(array($webhook->getUid() => $webhook->getResponse()->transaction->type))
+  "USER_ID" => $arOrder["USER_ID"]
 );
 
-if (CSalePaySystemAction::GetParamValue("PAYED") != "Y" && $arFields["PS_STATUS"] == "Y" && Doubleval(CSalePaySystemAction::GetParamValue("SHOULD_PAY")) == DoubleVal($money->getAmount()) {
-  $payment->setField('PAID', 'Y');
+if (CSalePaySystemAction::GetParamValue("PAYED") != "Y" &&
+    $arFields["PS_STATUS"] == "Y" &&
+    $arOrder["PRICE"] == $money->getAmount()) {
+  CSaleOrder::PayOrder($arOrder["ID"], "Y", True, True, 0, $arFields);
+  CSaleOrder::StatusOrder($arOrder["ID"], "P");
+  _output_message("OK: UPDATED. UID " . $webhook->getUid());
 }
 
-if(!empty($arFields)) {
-  $result = $payment->setFields($arFields);
-  if ($result->isSuccess())
-    $order->save();
-}
-
-_output_message("OK " . $webhook->getUid());
+_output_message("OK: NOT UPDATED. UID " . $webhook->getUid());
