@@ -2,6 +2,9 @@
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
+$module_id = "devtm.begateway";
+if( ! \Bitrix\Main\Loader::includeModule($module_id) ) return;
+
 \beGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
 \beGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
 \beGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");

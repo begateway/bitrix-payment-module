@@ -8,7 +8,7 @@ $psDescription = Loc::getMessage("SALE_BEGATEWAY_DESCRIPTION");
 $arAclGroups = array();
 $db_gr = CGroup::GetList(($by="c_sort"), ($o="desc"), array());
 while($group = $db_gr->Fetch())
-	$arAclGroups[] = array($group["ID"] => array( "NAME" => $group["NAME"]));
+	$arAclGroups[$group["ID"]] = array("NAME" => $group["NAME"]);
 
 $arPSCorrespondence = array(
 		"DOMAIN_GATEWAY" => array(
@@ -51,19 +51,25 @@ $arPSCorrespondence = array(
 		"SUCCESS_URL" => array(
 				"NAME" => GetMessage("SALE_BEGATEWAY_SUCCESS_URL_NAME"),
 				"DESCR" => GetMessage("SALE_BEGATEWAY_SUCCESS_URL_DESC"),
-				"VALUE" => "http://www.yoursite.com/sale/payment_result.php",
+				"VALUE" => "http://www.yoursite.com/sale/payment_success.php",
 				"TYPE" => ""
 			),
 		"FAIL_URL" => array(
 				"NAME" => GetMessage("SALE_BEGATEWAY_FAIL_URL_NAME"),
 				"DESCR" => GetMessage("SALE_BEGATEWAY_FAIL_URL_DESC"),
-				"VALUE" => "http://www.yoursite.com/sale/payment_failed.php",
+				"VALUE" => "http://www.yoursite.com/sale/payment_fail.php",
 				"TYPE" => ""
 			),
     "NOTIFICATION_URL" => array(
         "NAME" => GetMessage("SALE_BEGATEWAY_NOTIFICATION_URL_NAME"),
         "DESCR" => GetMessage("SALE_BEGATEWAY_NOTIFICATION_URL_DESC"),
         "VALUE" => "http://www.yoursite.com/sale/payment_notification.php",
+        "TYPE" => ""
+      ),
+    "DECLINE_URL" => array(
+        "NAME" => GetMessage("SALE_BEGATEWAY_DECLINE_URL_NAME"),
+        "DESCR" => GetMessage("SALE_BEGATEWAY_DECLINE_URL_DESC"),
+        "VALUE" => "http://www.yoursite.com/personal/order/",
         "TYPE" => ""
       ),
     "CANCEL_URL" => array(
@@ -98,7 +104,7 @@ $arPSCorrespondence = array(
         "NAME" => GetMessage("SALE_BEGATEWAY_GROUPS_NAME"),
         "DESCR" => GetMessage("SALE_BEGATEWAY_GROUPS_DESC"),
         "TYPE" => "SELECT",
-        "VALUE" => array($arAclGroups)
+        "VALUE" => $arAclGroups
       ),
 		"ORDER_ID" => array(
 				"NAME" => GetMessage("SALE_BEGATEWAY_ORDER_ID"),

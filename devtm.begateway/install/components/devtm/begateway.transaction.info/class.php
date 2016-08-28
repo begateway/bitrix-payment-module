@@ -1,13 +1,19 @@
 <?
+use Bitrix\Sale\Order;
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
 class beTransInfoComponent extends CBitrixComponent {
 
+  protected $module_id = "devtm.begateway";
+
 	protected function checkToken() {
 		global $USER;
 
-		if ( !\Bitrix\Main\Loader::includeModule( "sale" ) || !$USER->isAuthorized() )
+    if ( ! \Bitrix\Main\Loader::includeModule( $this->module_id ) ||
+			   ! \Bitrix\Main\Loader::includeModule( "sale" ) ||
+			   ! $USER->isAuthorized()
+		)
 			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TRANS_INFO") );
 
     $token = $_REQUEST['token'];
@@ -29,6 +35,7 @@ class beTransInfoComponent extends CBitrixComponent {
       # locate order and its payment system
       $order_id = $_REQUEST['order_id'];
       $payment_id = $_REQUEST['payment_id'];
+      $uid = $_REQUEST['uid'];
       $order = Order::load($order_id);
 
       if (!$order)
@@ -54,7 +61,17 @@ class beTransInfoComponent extends CBitrixComponent {
 			if( ! isset( $response->checkout ) )
 				throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_FAIL_TOKEN_QUERY") );
 
-      if ($response->getTrackingId() != SITE_ID . ':' . $order_id . ':' . $payment_id)
+      # verify token matches uid
+			$this->arResult = $response->checkout;
+      $type = $this->arResult->transaction_type;
+
+      if (! isset($this->arResult->gateway_response))
+        throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TRANS_INFO") );
+
+      if ($this->arResult->gateway_response->$type->uid != $uid)
+          throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TOKEN_ACCESS") );
+
+      if ($this->arResult->order->tracking_id != SITE_ID . ':' . $order_id . ':' . $payment_id)
 				throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_WRONG_TRACKING_ID") );
 
       $money = new \beGateway\Money;
@@ -63,11 +80,8 @@ class beTransInfoComponent extends CBitrixComponent {
 
 			$response->checkout->order->amount = CCurrencyLang::CurrencyFormat( $money->getAmount(), $money->getCurrency() );
 
-			$this->arResult = $response->checkout;
-      $type = $this->arResult->transaction_type;
-
       $this->arResult->order->description = $APPLICATION->ConvertCharset($this->arResult->order->description, 'utf-8', SITE_CHARSET);
-      $this->arResult->gateway_response->$type->billing_descriptor = $APPLICATION->ConvertCharset($this->arResult->gateway_response->$type->billing_descriptor, SITR_CHARSET, 'utf-8');
+      $this->arResult->gateway_response->$type->billing_descriptor = $APPLICATION->ConvertCharset($this->arResult->gateway_response->$type->billing_descriptor, SITE_CHARSET, 'utf-8');
 
 			$this->IncludeComponentTemplate();
 

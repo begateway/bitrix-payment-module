@@ -2,6 +2,9 @@
 use Bitrix\Main\Localization\Loc;
 require_once dirname(__FILE__) . '/common.php';
 
+$module_id = "devtm.begateway";
+if ( ! \Bitrix\Main\Loader::includeModule($module_id) ) return;
+
 Loc::loadMessages(__FILE__);
 
 \beGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
@@ -15,6 +18,9 @@ $order_id = (strlen(CSalePaySystemAction::GetParamValue("ORDER_ID")) > 0) ? CSal
 $order_id = IntVal($order_id);
 $payment_id = CSalePaySystemAction::GetParamValue("ORDER_PAYMENT_ID");
 $arReturnParams = array('order_id' => $order_id, 'payment_id' => $payment_id);
+
+$form_type = CSalePaySystemAction::GetParamValue("FORM_TYPE");
+$form_type = strlen($form_type) > 0 ? $form_type : 'redirect';
 
 $transaction = new \beGateway\GetPaymentToken;
 
@@ -39,7 +45,7 @@ $notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:84
 $transaction->setNotificationUrl( $notification_url );
 $transaction->setSuccessUrl( _build_return_url(CSalePaySystemAction::GetParamValue("SUCCESS_URL"), $arReturnParams) );
 $transaction->setFailUrl( _build_return_url(CSalePaySystemAction::GetParamValue("FAIL_URL"), $arReturnParams) );
-$transaction->setDeclineUrl( CSalePaySystemAction::GetParamValue("CANCEL_URL") );
+$transaction->setDeclineUrl( CSalePaySystemAction::GetParamValue("DECLINE_URL") );
 $transaction->setCancelUrl( CSalePaySystemAction::GetParamValue("CANCEL_URL") );
 
 $firstName = CSalePaySystemAction::GetParamValue("FIRST_NAME");
@@ -55,6 +61,11 @@ $country = CSalePaySystemAction::GetParamValue("COUNTRY");
 
 if (strlen($middleName) > 0 && strlen($firstName . ' ' . $middleName) < 31) {
   $firstName = $firstName . ' ' . $middleName;
+}
+
+# if firstName is set to FIO property
+if (strpos($firstName, ' ') > 0 && strlen($lastName) == 0) {
+  list($firtName, $lastName) = explode(' ', $firstName, 2);
 }
 
 if ($firstName)$transaction->customer->setFirstName($APPLICATION->ConvertCharset($firstName, SITE_CHARSET, 'utf-8'));
@@ -78,8 +89,6 @@ if(!$response->isSuccess())
 }
 
 $_SESSION["token"] = $response->getToken();
-
-$form_type = CSalePaySystemAction::GetParamValue("FORM_TYPE");
 
 if( $form_type == "inline" || $form_type == "overlay" ):
 

@@ -1,6 +1,10 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
 use Bitrix\Sale\Order;
 use Bitrix\Main\Localization\Loc;
+
+$module_id = "devtm.begateway";
+if( ! \Bitrix\Main\Loader::includeModule($module_id) ) return;
+
 require_once dirname(__FILE__) . '/common.php';
 Loc::loadMessages(__FILE__);
 

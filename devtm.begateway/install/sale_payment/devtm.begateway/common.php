@@ -2,7 +2,7 @@
 
 function _output_message($msg) {
   global $APPLICATION;
-  
+
   $APPLICATION->RestartBuffer();
   echo $msg;
   die;
