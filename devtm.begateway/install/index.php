@@ -4,8 +4,7 @@ use Bitrix\Main\Localization\Loc;
 
 if( ! IsModuleInstalled("sale") ||
 	! function_exists("curl_init") ||
-	! function_exists("json_decode") ||
-	! function_exists("mb_detect_encoding") ) return;
+	! function_exists("json_decode") ) return;
 
 Loc::loadMessages(__FILE__);
 

@@ -1,6 +1,7 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
 use Bitrix\Sale\Order;
 use Bitrix\Main\Localization\Loc;
+require_once dirname(__FILE__) . '/common.php';
 Loc::loadMessages(__FILE__);
 
 $webhook = new \beGateway\Webhook;
@@ -69,10 +70,3 @@ if(!empty($arFields)) {
 }
 
 _output_message("OK " . $webhook->getUid());
-
-function _output_message($msg) {
-  $APPLICATION->RestartBuffer();
-  echo $msg;
-  die;
-}
-?>

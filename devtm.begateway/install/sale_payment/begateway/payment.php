@@ -1,5 +1,7 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
 use Bitrix\Main\Localization\Loc;
+require_once dirname(__FILE__) . '/common.php';
+
 Loc::loadMessages(__FILE__);
 
 if (!function_exists('mb_convert_encoding')) {
@@ -17,6 +19,7 @@ $currency = $GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["CURRENCY"];
 $order_id = (strlen(CSalePaySystemAction::GetParamValue("ORDER_ID")) > 0) ? CSalePaySystemAction::GetParamValue("ORDER_ID") : $GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["ID"];
 $order_id = IntVal($order_id);
 $payment_id = CSalePaySystemAction::GetParamValue("ORDER_PAYMENT_ID");
+$arReturnParams = array('order_id' => $order_id, 'payment_id' => $payment_id);
 
 $transaction = new \beGateway\GetPaymentToken;
 
@@ -39,8 +42,8 @@ $notification_url = CSalePaySystemAction::GetParamValue("NOTIFICATION_URL");
 $notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:8443', $notification_url);
 
 $transaction->setNotificationUrl( $notification_url );
-$transaction->setSuccessUrl( CSalePaySystemAction::GetParamValue("NOTIFICATION_URL") );
-$transaction->setFailUrl( CSalePaySystemAction::GetParamValue("FAIL_URL") );
+$transaction->setSuccessUrl( _build_return_url(CSalePaySystemAction::GetParamValue("SUCCESS_URL"), $arReturnParams) );
+$transaction->setFailUrl( _build_return_url(CSalePaySystemAction::GetParamValue("FAIL_URL"), $arReturnParams) );
 $transaction->setDeclineUrl( CSalePaySystemAction::GetParamValue("CANCEL_URL") );
 $transaction->setCancelUrl( CSalePaySystemAction::GetParamValue("CANCEL_URL") );
 
