@@ -71,7 +71,7 @@ class beTransInfoComponent extends CBitrixComponent {
       if ($this->arResult->gateway_response->$type->uid != $uid)
           throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TOKEN_ACCESS") );
 
-      if ($this->arResult->order->tracking_id != SITE_ID . ':' . $order_id . ':' . $payment_id)
+      if ($this->arResult->order->tracking_id != $order_id . ':' . $payment_id)
 				throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_WRONG_TRACKING_ID") );
 
       $money = new \beGateway\Money;

@@ -26,7 +26,7 @@ $transaction = new \beGateway\GetPaymentToken;
 
 $transaction->money->setCurrency($currency);
 $transaction->money->setAmount($out_summ);
-$transaction->setTrackingId(SITE_ID . ":" . $order_id . ":" . $payment_id);
+$transaction->setTrackingId($order_id . ":" . $payment_id);
 $transaction->setDescription($APPLICATION->ConvertCharset(Loc::getMessage("SALE_BEGATEWAY_ORDER_ID") . " #" .$order_id, SITE_CHARSET, 'utf-8'));
 $transaction->setLanguage(LANGUAGE_ID);
 

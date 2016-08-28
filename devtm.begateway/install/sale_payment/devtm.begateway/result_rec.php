@@ -10,7 +10,7 @@ Loc::loadMessages(__FILE__);
 
 $webhook = new \beGateway\Webhook;
 
-list($site_id, $order_id, $payment_id) = explode(':', $webhook->getTrackingId());
+list($order_id, $payment_id) = explode(':', $webhook->getTrackingId());
 
 $order = Order::load($order_id);
 

@@ -1,4 +1,5 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
+use Bitrix\Sale\Order;
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
@@ -13,7 +14,7 @@ if( ! \Bitrix\Main\Loader::includeModule($module_id) ) return;
 $payment_id = CSalePaySystemAction::GetParamValue("ORDER_PAYMENT_ID");
 $order_id = IntVal($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["ID"]);
 
-$tracking_id = SITE_ID . ":" . $order_id . ":" . $payment_id;
+$tracking_id = $order_id . ":" . $payment_id;
 
 set_time_limit(0);
 
@@ -28,25 +29,31 @@ if ($response && $response != 'error') {
   $money->setCents($response->getResponse()->transaction->amount);
 
 	if($response->getTrackingId() == $tracking_id) {
-		$arOrder = CSaleOrder::GetByID($ORDER_ID);
-		$arFields = array(
-				"PS_STATUS" => ($response->isSuccess() ? "Y":"N"),
-				"PS_STATUS_DESCRIPTION" => json_encode(array($response->getUid() => $response->getResponse()->transaction->type)),
-				"PS_STATUS_MESSAGE" => $response->getMessage(),
-				"PS_SUM" => DoubleVal($money->getAmount()),
-				"PS_CURRENCY" => $money->getCurrency(),
-				"PS_RESPONSE_DATE" => Date(CDatabase::DateFormatToPHP(CLang::GetDateFormat("FULL", LANG))),
-			);
+		$arOrder = CSaleOrder::GetByID($order_id);
+    $message = array();
+    $message []= Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_UID") . ' ' . $response->getUid(). ". " . Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_TIME") . ' ' . $response->getResponse()->transaction->paid_at;
 
-		if ($arOrder["PAYED"] != "Y" && $arFields["PS_STATUS"] == "Y" && Doubleval($arOrder["PRICE"]) == DoubleVal($arFields["PS_SUM"])) {
-			CSaleOrder::PayOrder($arOrder["ID"], "Y");
-		}
+    if(isset($response->getResponse()->transaction->three_d_secure_verification->pa_status)) {
+      $message[] = "3-D Secure: " .$response->getResponse()->transaction->three_d_secure_verification->pa_status;
+    }
+    $arFields = array(
+      "PS_STATUS" => ($response->isSuccess() ? "Y" : "N"),
+      "PS_STATUS_DESCRIPTION" => implode("\n",$message),
+      "PS_SUM" => $money->getAmount(),
+      "PS_CURRENCY" => $money->getCurrency(),
+      "PS_RESPONSE_DATE" => new \Bitrix\Main\Type\DateTime(),
+      "USER_ID" => $arOrder["USER_ID"]
+    );
+
+    if (CSalePaySystemAction::GetParamValue("PAYED") != "Y" &&
+        $arFields["PS_STATUS"] == "Y" &&
+        $arOrder["PRICE"] == $money->getAmount()) {
+      CSaleOrder::PayOrder($arOrder["ID"], "Y", True, True, 0, $arFields);
+      CSaleOrder::StatusOrder($arOrder["ID"], "P");
+    }
+
+    return true;
 	}
-	if(!empty($arFields))
-		CSaleOrder::Update($ORDER_ID, $arFields);
-
-	return true;
 }
 
 return false;
-?>
