@@ -65,7 +65,7 @@ class beGatewayTransactionInfoComponent extends CBitrixComponent {
 			$query = new \beGateway\QueryByToken();
 			$query->setToken($token);
 			$response = $query->submit()->getResponse();
-      
+
 			if( ! isset( $response->checkout ) )
 				throw new Exception( Loc::getMessage("COMPONENT_BEGATEWAY_FAIL_TOKEN_QUERY") );
 
@@ -77,7 +77,7 @@ class beGatewayTransactionInfoComponent extends CBitrixComponent {
         throw new Exception( Loc::getMessage("COMPONENT_BEGATEWAY_NO_TRANS_INFO") );
 
       if ($this->arResult->gateway_response->$type->uid != $uid)
-          throw new Exception( Loc::getMessage("COMPONENT_BEGATEWAY_NO_TOKEN_ACCESS") );
+          throw new Exception( Loc::getMessage("COMPONENT_BEGATEWAY_NO_UID_TOKEN_ACCESS") );
 
       if ($this->arResult->order->tracking_id != $order_id . ':' . $payment_id)
 				throw new Exception( Loc::getMessage("COMPONENT_BEGATEWAY_WRONG_TRACKING_ID") );

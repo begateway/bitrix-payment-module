@@ -5,3 +5,4 @@ all:
 	find begateway.payment -name \*.php -exec sh -c 'iconv -f utf-8 -t cp1251 {} > {}.1251 && mv {}.1251 {}' \;
 	zip -r bitrix-begateway-windows-1251.zip begateway.payment
 	git checkout -f begateway.payment
+	cd bitrix.payment/lib/beGateway && git checkout -f
