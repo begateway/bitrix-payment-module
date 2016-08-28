@@ -61,7 +61,7 @@ class begateway_payment extends CModule {
   }
 
   public function uninstallFiles() {
-    DeleteDirFilesEx("/bitrix/components/begateway");
+    DeleteDirFilesEx("/bitrix/components/".$this->MODULE_ID);
     DeleteDirFilesEx("/bitrix/php_interface/include/sale_payment/begateway");
     return true;
   }

@@ -1,4 +1,12 @@
 <?
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+
+if (!CModule::IncludeModule("sale"))
+{
+	ShowError(GetMessage("COMPONENT_BEGATEWAY_SALE_MODULE_NOT_INSTALL"));
+	return;
+}
+
 use Bitrix\Sale\Order;
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
