@@ -65,7 +65,7 @@ class beGatewayTransactionInfoComponent extends CBitrixComponent {
 			$query = new \beGateway\QueryByToken();
 			$query->setToken($token);
 			$response = $query->submit()->getResponse();
-
+      
 			if( ! isset( $response->checkout ) )
 				throw new Exception( Loc::getMessage("COMPONENT_BEGATEWAY_FAIL_TOKEN_QUERY") );
 

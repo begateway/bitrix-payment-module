@@ -47,8 +47,8 @@ $notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:84
 
 $transaction->setNotificationUrl( $notification_url );
 $transaction->setSuccessUrl( _build_return_url(CSalePaySystemAction::GetParamValue("SUCCESS_URL"), $arReturnParams) );
-$transaction->setFailUrl( _build_return_url(CSalePaySystemAction::GetParamValue("FAIL_URL"), $arReturnParams) );
-$transaction->setDeclineUrl( CSalePaySystemAction::GetParamValue("DECLINE_URL") );
+$transaction->setFailUrl( _build_return_url(CSalePaySystemAction::GetParamValue("DECLINE_URL"), $arReturnParams) );
+$transaction->setDeclineUrl( CSalePaySystemAction::GetParamValue("FAIL_URL") );
 $transaction->setCancelUrl( CSalePaySystemAction::GetParamValue("CANCEL_URL") );
 
 $firstName = CSalePaySystemAction::GetParamValue("FIRST_NAME");
@@ -114,7 +114,7 @@ if( $form_type == "inline" || $form_type == "overlay" ):
 			id: "<?= $id?>",
 			url: "<?= $response->getRedirectUrl()?>",
 			style: "<?= $css?>",
-			size: { width: 500, height: 500 }
+			size: { width: 380, height: 500 }
 		}
 
 		var pf = new BeGateway(options);

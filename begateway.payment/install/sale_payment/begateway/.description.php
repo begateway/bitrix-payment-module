@@ -49,6 +49,12 @@ $arPSCorrespondence = array(
 				"VALUE" => "http://www.yoursite.com/sale/payment_success.php",
 				"TYPE" => ""
 			),
+    "DECLINE_URL" => array(
+        "NAME" => GetMessage("SALE_BEGATEWAY_DECLINE_URL_NAME"),
+        "DESCR" => GetMessage("SALE_BEGATEWAY_DECLINE_URL_DESC"),
+        "VALUE" => "http://www.yoursite.com/personal/order/",
+        "TYPE" => ""
+      ),
 		"FAIL_URL" => array(
 				"NAME" => GetMessage("SALE_BEGATEWAY_FAIL_URL_NAME"),
 				"DESCR" => GetMessage("SALE_BEGATEWAY_FAIL_URL_DESC"),
@@ -59,12 +65,6 @@ $arPSCorrespondence = array(
         "NAME" => GetMessage("SALE_BEGATEWAY_NOTIFICATION_URL_NAME"),
         "DESCR" => GetMessage("SALE_BEGATEWAY_NOTIFICATION_URL_DESC"),
         "VALUE" => "http://www.yoursite.com/sale/payment_notification.php",
-        "TYPE" => ""
-      ),
-    "DECLINE_URL" => array(
-        "NAME" => GetMessage("SALE_BEGATEWAY_DECLINE_URL_NAME"),
-        "DESCR" => GetMessage("SALE_BEGATEWAY_DECLINE_URL_DESC"),
-        "VALUE" => "http://www.yoursite.com/personal/order/",
         "TYPE" => ""
       ),
     "CANCEL_URL" => array(
