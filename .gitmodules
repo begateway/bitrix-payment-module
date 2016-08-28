@@ -1,0 +1,3 @@
+[submodule "devtm.begateway/lib/beGateway"]
+	path = devtm.begateway/lib/beGateway
+	url = https://github.com/beGateway/begateway-api-php.git
