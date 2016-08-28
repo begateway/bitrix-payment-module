@@ -32,8 +32,6 @@ $MESS["SALE_BEGATEWAY_FORM_TYPE_DESC"] = "Перенаправление - пе�
 $MESS["SALE_BEGATEWAY_FORM_TYPE_REDIRECT_NAME"] = "Перенаправление";
 $MESS["SALE_BEGATEWAY_FORM_TYPE_INLINE_NAME"] = "Встраиваемая";
 $MESS["SALE_BEGATEWAY_FORM_TYPE_OVERLAY_NAME"] = "Всплывающая";
-$MESS["SALE_BEGATEWAY_GROUPS_NAME"] = "Группа";
-$MESS["SALE_BEGATEWAY_GROUPS_DESC"] = "Выберите группу пользователей, которым будет доступно управление операциями возврата и отмены оплат";
 
 $MESS["SALE_BEGATEWAY_FIRST_NAME_NAME"]="Имя покупателя";
 $MESS["SALE_BEGATEWAY_FIRST_NAME_DESC"]="";

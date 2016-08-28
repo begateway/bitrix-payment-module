@@ -5,11 +5,6 @@ Loc::loadMessages(__FILE__);
 $psTitle = Loc::getMessage("SALE_BEGATEWAY_TITLE");
 $psDescription = Loc::getMessage("SALE_BEGATEWAY_DESCRIPTION");
 
-$arAclGroups = array();
-$db_gr = CGroup::GetList(($by="c_sort"), ($o="desc"), array());
-while($group = $db_gr->Fetch())
-	$arAclGroups[$group["ID"]] = array("NAME" => $group["NAME"]);
-
 $arPSCorrespondence = array(
 		"DOMAIN_GATEWAY" => array(
 				"NAME" => GetMessage("SALE_BEGATEWAY_DOMAIN_GATEWAY_NAME"),
@@ -99,12 +94,6 @@ $arPSCorrespondence = array(
         "DESCR" => GetMessage("SALE_BEGATEWAY_CSS_FORM_DESC"),
         "VALUE" => "",
         "TYPE" => ""
-      ),
-    "GROUPS" => array(
-        "NAME" => GetMessage("SALE_BEGATEWAY_GROUPS_NAME"),
-        "DESCR" => GetMessage("SALE_BEGATEWAY_GROUPS_DESC"),
-        "TYPE" => "SELECT",
-        "VALUE" => $arAclGroups
       ),
 		"ORDER_ID" => array(
 				"NAME" => GetMessage("SALE_BEGATEWAY_ORDER_ID"),

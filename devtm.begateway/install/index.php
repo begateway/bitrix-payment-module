@@ -55,33 +55,23 @@ class devtm_beGateway extends CModule
 
     public function installFiles()
     {
-		CopyDirFiles(
-            $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/sale_payment/",
-            $_SERVER["DOCUMENT_ROOT"]."/bitrix/php_interface/include/sale_payment",
-            true, true
-        );
-		CopyDirFiles(
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/components/",
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/components/",
-			true, true
-		);
-		CopyDirFiles(
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/admin/",
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/admin",
-			true, true
-		);
-        return true;
+  		CopyDirFiles(
+        $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/sale_payment/",
+        $_SERVER["DOCUMENT_ROOT"]."/bitrix/php_interface/include/sale_payment",
+        true, true
+      );
+  		CopyDirFiles(
+  			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/components/",
+  			$_SERVER["DOCUMENT_ROOT"]."/bitrix/components/",
+  			true, true
+  		);
+      return true;
     }
 
     public function uninstallFiles()
     {
-
-		DeleteDirFilesEx("/bitrix/components/".$this->namespaceFolder);
-		DeleteDirFilesEx("/bitrix/php_interface/include/sale_payment/devtm.begateway");
-		DeleteDirFiles(
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID ."/install/admin/",
-			$_SERVER["DOCUMENT_ROOT"]."/bitrix/admin"
-		);
-		return true;
+  		DeleteDirFilesEx("/bitrix/components/".$this->namespaceFolder);
+  		DeleteDirFilesEx("/bitrix/php_interface/include/sale_payment/devtm.begateway");
+  		return true;
     }
 }
