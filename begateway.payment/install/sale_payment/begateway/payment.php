@@ -3,7 +3,10 @@ use Bitrix\Main\Localization\Loc;
 require_once dirname(__FILE__) . '/common.php';
 
 $module_id = "begateway.payment";
-if ( ! \Bitrix\Main\Loader::includeModule($module_id) ) return;
+if ( ! \Bitrix\Main\Loader::includeModule($module_id) ) {
+  ShowMessage(Loc::getMessage('SALE_BEGATEWAY_MODULE_ERROR'));
+  return;
+}
 
 Loc::loadMessages(__FILE__);
 
