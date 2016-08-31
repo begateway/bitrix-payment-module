@@ -40,7 +40,10 @@ else
 }
 
 $notification_url = \Bitrix\Main\Config\Option::get( $module_id, "notification_url" );
-$notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:8443', $notification_url);
+
+$server_name = $_SERVER["SERVER_NAME"];
+if (preg_match('/bitrix(.*)\.local/', $server_name))
+  $notification_url = str_replace($server_name, $server_name.'.webhook.begateway.com:8443', $notification_url);
 
 $transaction->setNotificationUrl( $notification_url );
 $transaction->setSuccessUrl( \Bitrix\Main\Config\Option::get( $module_id, "success_url" ) );
