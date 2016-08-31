@@ -53,8 +53,8 @@ class beTransInfoComponent extends CBitrixComponent
 			$this->arResult = $response->checkout;
       $type = $this->arResult->transaction_type;
 
-      $this->arResult->order->description = \beGateway\Utf8::to($this->arResult->order->description, LANG_CHARSET);
-      $this->arResult->gateway_response->$type->billing_descriptor = \beGateway\Utf8::to($this->arResult->gateway_response->$type->billing_descriptor, LANG_CHARSET);
+      $this->arResult->order->description = $APPLICATION->ConvertCharset($this->arResult->order->description, 'utf-8', SITE_CHARSET);
+      $this->arResult->gateway_response->$type->billing_descriptor = $APPLICATION->ConvertCharset($this->arResult->gateway_response->$type->billing_descriptor, 'utf-8', SITE_CHARSET);
 
 			$this->IncludeComponentTemplate();
 

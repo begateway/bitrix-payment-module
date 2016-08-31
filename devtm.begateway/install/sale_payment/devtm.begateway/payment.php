@@ -1,4 +1,5 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
+global $APPLICATION;
 
 $module_id = "devtm.begateway";
 if( ! \Bitrix\Main\Loader::includeModule($module_id) || ! $GLOBALS["USER"]->IsAuthorized() ) return;
@@ -26,7 +27,7 @@ $transaction = new \beGateway\GetPaymentToken;
 $transaction->money->setCurrency($currency);
 $transaction->money->setAmount($out_summ);
 $transaction->setTrackingId(SITE_ID . "_" . $order_id);
-$transaction->setDescription(\beGateway\Utf8::from(Loc::getMessage("DEVTM_BEGATEWAY_ORDER_TITLE") . " #" .$order_id, LANG_CHARSET));
+$transaction->setDescription($APPLICATION->ConvertCharset(Loc::getMessage("DEVTM_BEGATEWAY_ORDER_TITLE") . " #" .$order_id, SITE_CHARSET, 'utf-8'));
 $transaction->setLanguage(LANGUAGE_ID);
 
 if( \Bitrix\Main\Config\Option::get( $module_id, "transaction_type" ) == "authorization" )
@@ -76,26 +77,15 @@ if( \Bitrix\Main\Loader::includeModule( "sale" ) )
 	}
 }
 
-
-//Тестовые данные
-//$firstName = "John";
-//$city = "RigaGGG";
-//$zip = "LV-1082";
-//$email = "john@example.com";
-//$country = "LV";
-//$phone = ;
-//$state = ;
-
-
-if ($firtName) $transaction->customer->setFirstName(\beGateway\Utf8::from($firstName, LANG_CHARSET));
-if ($lastName) $transaction->customer->setLastName(\beGateway\Utf8::from($lastName, LANG_CHARSET));
-if ($address)  $transaction->customer->setAddress(\beGateway\Utf8::from($address, LANG_CHARSET));
-if ($city)     $transaction->customer->setCity(\beGateway\Utf8::from($city, LANG_CHARSET));
-if ($zip)      $transaction->customer->setZip(\beGateway\Utf8::from($zip, LANG_CHARSET));
-if ($email)    $transaction->customer->setEmail(\beGateway\Utf8::from($email, LANG_CHARSET));
-if ($phone)    $transaction->customer->setPhone(\beGateway\Utf8::from($phone, LANG_CHARSET));
-if ($state)    $transaction->customer->setState(\beGateway\Utf8::from($state, LANG_CHARSET));
-if ($country)  $transaction->customer->setCountry(\beGateway\Utf8::from($country, LANG_CHARSET));
+if ($firstName)$transaction->customer->setFirstName($APPLICATION->ConvertCharset($firstName, SITE_CHARSET, 'utf-8'));
+if ($lastName) $transaction->customer->setLastName($APPLICATION->ConvertCharset($lastName, SITE_CHARSET, 'utf-8'));
+if ($address)  $transaction->customer->setAddress($APPLICATION->ConvertCharset($address, SITE_CHARSET, 'utf-8'));
+if ($city)     $transaction->customer->setCity($APPLICATION->ConvertCharset($city, SITE_CHARSET, 'utf-8'));
+if ($zip)      $transaction->customer->setZip($APPLICATION->ConvertCharset($zip, SITE_CHARSET, 'utf-8'));
+if ($email)    $transaction->customer->setEmail($APPLICATION->ConvertCharset($email, SITE_CHARSET, 'utf-8'));
+if ($phone)    $transaction->customer->setPhone($APPLICATION->ConvertCharset($phone, SITE_CHARSET, 'utf-8'));
+if ($state)    $transaction->customer->setState($APPLICATION->ConvertCharset($state, SITE_CHARSET, 'utf-8'));
+if ($country)  $transaction->customer->setCountry($APPLICATION->ConvertCharset($country, SITE_CHARSET, 'utf-8'));
 
 $transaction->setAddressHidden();
 
