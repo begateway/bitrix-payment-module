@@ -17,12 +17,6 @@ class beTransInfoComponent extends CBitrixComponent
 
     $token = $_REQUEST['token'];
 
-		if( strlen($token) != 64)
-			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_WRONG_TOKEN_LONG") );
-
-		if( md5($token) != $_SESSION["token"])
-			throw new Exception( Loc::getMessage("DEVTM_BEGATEWAY_NO_TOKEN_ACCESS") );
-
     return $token;
 	}
 
