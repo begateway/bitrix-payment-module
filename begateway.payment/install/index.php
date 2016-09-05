@@ -10,7 +10,7 @@ Loc::loadMessages(__FILE__);
 
 class begateway_payment extends CModule {
 
-  public $MODULE_ID = "begateway.payment";
+  var $MODULE_ID = "begateway.payment";
   public $MODULE_VERSION;
   public $MODULE_VERSION_DATE;
   public $MODULE_NAME;
