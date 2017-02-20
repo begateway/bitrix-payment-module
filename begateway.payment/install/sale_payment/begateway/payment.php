@@ -114,7 +114,7 @@ if( $form_type == "inline" || $form_type == "overlay" ):
 			id: "<?= $id?>",
 			url: "<?= $response->getRedirectUrl()?>",
 			style: "<?= $css?>",
-			size: { width: 380, height: 500 }
+			size: { width: 380, height: 550 }
 		}
 
 		var pf = new BeGateway(options);
