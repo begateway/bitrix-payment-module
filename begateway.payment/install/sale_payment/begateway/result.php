@@ -45,7 +45,7 @@ if ($response && $response != 'error') {
       "USER_ID" => $arOrder["USER_ID"]
     );
 
-    if (CSalePaySystemAction::GetParamValue("PAYED") != "Y" &&
+    if ($arOrder["PAYED"] != "Y" &&
         $arFields["PS_STATUS"] == "Y" &&
         $arOrder["PRICE"] == $money->getAmount()) {
       CSaleOrder::PayOrder($arOrder["ID"], "Y", True, True, 0, $arFields);

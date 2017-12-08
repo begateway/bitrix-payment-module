@@ -4,8 +4,8 @@ use Bitrix\Main\Localization\Loc;
 
 $module_id = "begateway.payment";
 if( ! \Bitrix\Main\Loader::includeModule($module_id) ) return;
-
 require_once dirname(__FILE__) . '/common.php';
+
 Loc::loadMessages(__FILE__);
 
 $webhook = new \beGateway\Webhook;
@@ -60,7 +60,7 @@ $arFields = array(
   "USER_ID" => $arOrder["USER_ID"]
 );
 
-if (CSalePaySystemAction::GetParamValue("PAYED") != "Y" &&
+if ($arOrder["PAYED"] != "Y" &&
     $arFields["PS_STATUS"] == "Y" &&
     $arOrder["PRICE"] == $money->getAmount()) {
   CSaleOrder::PayOrder($arOrder["ID"], "Y", True, True, 0, $arFields);
