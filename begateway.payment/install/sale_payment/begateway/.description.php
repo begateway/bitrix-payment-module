@@ -175,4 +175,3 @@ $arPSCorrespondence = array(
         )
 			)
 	);
-ksort($arPSCorrespondence);
