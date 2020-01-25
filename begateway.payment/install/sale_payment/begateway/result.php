@@ -6,10 +6,10 @@ Loc::loadMessages(__FILE__);
 $module_id = "begateway.payment";
 if( ! \Bitrix\Main\Loader::includeModule($module_id) ) return;
 
-\beGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
-\beGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
-\beGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
-\beGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
+\BeGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
+\BeGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
+\BeGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
+\BeGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
 
 $payment_id = CSalePaySystemAction::GetParamValue("ORDER_PAYMENT_ID");
 $order_id = IntVal($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["ID"]);
@@ -18,13 +18,13 @@ $tracking_id = $order_id . ":" . $payment_id;
 
 set_time_limit(0);
 
-$query = new \beGateway\QueryByTrackingId;
+$query = new \BeGateway\QueryByTrackingId;
 $query->setTrackingId($tracking_id);
 
 $response = $query->submit();
 
 if ($response && $response != 'error') {
-  $money = new \beGateway\Money;
+  $money = new \BeGateway\Money;
   $money->setCurrency($response->getResponse()->transaction->currency);
   $money->setCents($response->getResponse()->transaction->amount);
 
