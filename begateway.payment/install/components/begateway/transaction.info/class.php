@@ -26,9 +26,6 @@ class beGatewayTransactionInfoComponent extends CBitrixComponent {
 
     $token = $_REQUEST['token'];
 
-		if ( $token != $_SESSION["token"])
-			throw new Exception( Loc::getMessage("COMPONENT_BEGATEWAY_NO_TOKEN_ACCESS") );
-
     return $token;
 	}
 
