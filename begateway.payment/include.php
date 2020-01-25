@@ -2,6 +2,7 @@
 $lib_path = '/bitrix/modules/begateway.payment/lib/lib/BeGateway';
 
 $classes = array(
+  "\BeGateway\AdditionalData" => "$lib_path/AdditionalData.php",
   "\BeGateway\ApiAbstract" => "$lib_path/ApiAbstract.php",
   "\BeGateway\AuthorizationOperation" => "$lib_path/AuthorizationOperation.php",
   "\BeGateway\CaptureOperation" => "$lib_path/CaptureOperation.php",
