@@ -8,7 +8,7 @@ require_once dirname(__FILE__) . '/common.php';
 
 Loc::loadMessages(__FILE__);
 
-$webhook = new \beGateway\Webhook;
+$webhook = new \BeGateway\Webhook;
 
 list($order_id, $payment_id) = explode(':', $webhook->getTrackingId());
 
@@ -27,10 +27,10 @@ if (!$payment) {
 $arOrder = CSaleOrder::GetByID($order_id);
 CSalePaySystemAction::InitParamArrays($arOrder, $arOrder["ID"], '', array(), $payment->getFieldValues());
 
-\beGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
-\beGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
-\beGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
-\beGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
+\BeGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
+\BeGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
+\BeGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
+\BeGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
 
 if (!$webhook->isAuthorized()) {
   _output_message('ERROR: WEBHOOK IS NOT AUTHORIZED');
@@ -40,7 +40,7 @@ if (!$webhook->isAuthorized()) {
   _output_message('ERROR: WEBHOOK IS NOT AUTHORIZED');
 }
 
-$money = new \beGateway\Money;
+$money = new \BeGateway\Money;
 $money->setCurrency($webhook->getResponse()->transaction->currency);
 $money->setCents($webhook->getResponse()->transaction->amount);
 
@@ -53,6 +53,7 @@ if(isset($webhook->getResponse()->transaction->three_d_secure_verification->pa_s
 
 $arFields = array(
   "PS_STATUS" => ($webhook->isSuccess() ? "Y" : "N"),
+  "PS_INVOICE_ID" => $webhook->getUid(),
   "PS_STATUS_DESCRIPTION" => implode("\n",$message),
   "PS_SUM" => $money->getAmount(),
   "PS_CURRENCY" => $money->getCurrency(),

@@ -10,10 +10,10 @@ if ( ! \Bitrix\Main\Loader::includeModule($module_id) ) {
 
 Loc::loadMessages(__FILE__);
 
-\beGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
-\beGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
-\beGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
-\beGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
+\BeGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
+\BeGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
+\BeGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
+\BeGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
 
 $out_summ = number_format(floatval(strval($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["SHOULD_PAY"])), 2, ".", "");
 $currency = $GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["CURRENCY"];
@@ -25,7 +25,7 @@ $arReturnParams = array('order_id' => $order_id, 'payment_id' => $payment_id);
 $form_type = CSalePaySystemAction::GetParamValue("FORM_TYPE");
 $form_type = strlen($form_type) > 0 ? $form_type : 'redirect';
 
-$transaction = new \beGateway\GetPaymentToken;
+$transaction = new \BeGateway\GetPaymentToken;
 
 $transaction->money->setCurrency($currency);
 $transaction->money->setAmount($out_summ);
@@ -47,8 +47,8 @@ $notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:84
 
 $transaction->setNotificationUrl( $notification_url );
 $transaction->setSuccessUrl( _build_return_url(CSalePaySystemAction::GetParamValue("SUCCESS_URL"), $arReturnParams) );
-$transaction->setFailUrl( _build_return_url(CSalePaySystemAction::GetParamValue("DECLINE_URL"), $arReturnParams) );
-$transaction->setDeclineUrl( CSalePaySystemAction::GetParamValue("FAIL_URL") );
+$transaction->setDeclineUrl( _build_return_url(CSalePaySystemAction::GetParamValue("DECLINE_URL"), $arReturnParams) );
+$transaction->setFailUrl( _build_return_url(CSalePaySystemAction::GetParamValue("FAIL_URL"), $arReturnParams) );
 $transaction->setCancelUrl( CSalePaySystemAction::GetParamValue("CANCEL_URL") );
 
 $firstName = CSalePaySystemAction::GetParamValue("FIRST_NAME");
@@ -61,6 +61,7 @@ $zip = CSalePaySystemAction::GetParamValue("ZIP");
 $phone = CSalePaySystemAction::GetParamValue("PHONE");
 $state = CSalePaySystemAction::GetParamValue("STATE");
 $country = CSalePaySystemAction::GetParamValue("COUNTRY");
+$testmode = CSalePaySystemAction::GetParamValue("TESTMODE");
 
 if (strlen($middleName) > 0 && strlen($firstName . ' ' . $middleName) < 31) {
   $firstName = $firstName . ' ' . $middleName;
@@ -80,8 +81,7 @@ if ($email)    $transaction->customer->setEmail($APPLICATION->ConvertCharset($em
 if ($phone)    $transaction->customer->setPhone($APPLICATION->ConvertCharset($phone, SITE_CHARSET, 'utf-8'));
 if ($state)    $transaction->customer->setState($APPLICATION->ConvertCharset($state, SITE_CHARSET, 'utf-8'));
 if ($country)  $transaction->customer->setCountry($APPLICATION->ConvertCharset($country, SITE_CHARSET, 'utf-8'));
-
-$transaction->setAddressHidden();
+if ($testmode == 'Y')  $transaction->setTestMode(true);
 
 $response = $transaction->submit();
 

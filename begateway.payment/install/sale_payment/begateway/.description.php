@@ -160,5 +160,18 @@ $arPSCorrespondence = array(
 				"DESCR" => GetMessage("SALE_BEGATEWAY_PHONE_DESC"),
 				"VALUE" => "PHONE",
 				"TYPE" => "PROPERTY"
+			),
+		"TESTMODE" => array(
+				"NAME" => GetMessage("SALE_BEGATEWAY_DEMO_NAME"),
+				"DESCR" => GetMessage("SALE_BEGATEWAY_DEMO_DESC"),
+        "TYPE" => "SELECT",
+        "VALUE" => array(
+          "Y" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_DEMO_YES")
+          ),
+          "N" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_DEMO_NO")
+          )
+        )
 			)
 	);
