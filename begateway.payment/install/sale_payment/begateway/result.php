@@ -1,4 +1,6 @@
-<?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
+<?
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+
 use Bitrix\Sale\Order;
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
@@ -24,35 +26,39 @@ $query->setTrackingId($tracking_id);
 $response = $query->submit();
 
 if ($response && $response != 'error') {
-  $money = new \BeGateway\Money;
-  $money->setCurrency($response->getResponse()->transaction->currency);
-  $money->setCents($response->getResponse()->transaction->amount);
+  foreach ($response->getResponse()->transactions as $transaction) {
+    $money = new \BeGateway\Money;
+    $money->setCurrency($transaction->currency);
+    $money->setCents($transaction->amount);
 
-	if($response->getTrackingId() == $tracking_id) {
-		$arOrder = CSaleOrder::GetByID($order_id);
-    $message = array();
-    $message []= Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_UID") . ' ' . $response->getUid(). ". " . Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_TIME") . ' ' . $response->getResponse()->transaction->paid_at;
+  	if ($transaction->tracking_id == $tracking_id &&
+        ($transaction->type == 'payment' || $transaction->type == 'authorization')) {
+  		$arOrder = CSaleOrder::GetByID($order_id);
+      $message = array();
+      $message []= Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_UID") . ' ' . $transaction->uid. ". " . Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_TIME") . ' ' . $transaction->paid_at;
 
-    if(isset($response->getResponse()->transaction->three_d_secure_verification->pa_status)) {
-      $message[] = "3-D Secure: " .$response->getResponse()->transaction->three_d_secure_verification->pa_status;
+      if(isset($transaction->three_d_secure_verification->pa_status)) {
+        $message[] = "3-D Secure: " .$transaction->three_d_secure_verification->pa_status;
+      }
+
+      $arFields = array(
+        "PS_STATUS" => ($transaction->status == 'successful') ? "Y" : "N",
+        "PS_STATUS_DESCRIPTION" => implode("\n",$message),
+        "PS_SUM" => $money->getAmount(),
+        "PS_CURRENCY" => $money->getCurrency(),
+        "PS_RESPONSE_DATE" => new \Bitrix\Main\Type\DateTime(),
+        "USER_ID" => $arOrder["USER_ID"]
+      );
+
+      if ($arOrder["PAYED"] != "Y" &&
+          $arFields["PS_STATUS"] == "Y" &&
+          $arOrder["PRICE"] == $money->getAmount()) {
+        CSaleOrder::PayOrder($arOrder["ID"], "Y", True, True, 0, $arFields);
+        CSaleOrder::StatusOrder($arOrder["ID"], "P");
+      }
+
+      return true;
     }
-    $arFields = array(
-      "PS_STATUS" => ($response->isSuccess() ? "Y" : "N"),
-      "PS_STATUS_DESCRIPTION" => implode("\n",$message),
-      "PS_SUM" => $money->getAmount(),
-      "PS_CURRENCY" => $money->getCurrency(),
-      "PS_RESPONSE_DATE" => new \Bitrix\Main\Type\DateTime(),
-      "USER_ID" => $arOrder["USER_ID"]
-    );
-
-    if ($arOrder["PAYED"] != "Y" &&
-        $arFields["PS_STATUS"] == "Y" &&
-        $arOrder["PRICE"] == $money->getAmount()) {
-      CSaleOrder::PayOrder($arOrder["ID"], "Y", True, True, 0, $arFields);
-      CSaleOrder::StatusOrder($arOrder["ID"], "P");
-    }
-
-    return true;
 	}
 }
 
