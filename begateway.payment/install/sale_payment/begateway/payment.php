@@ -44,6 +44,7 @@ else
 
 $notification_url = CSalePaySystemAction::GetParamValue("NOTIFICATION_URL");
 $notification_url = str_replace('bitrix.local', 'bitrix.webhook.begateway.com:8443', $notification_url);
+$notification_url = str_replace('0.0.0.0', 'webhook.begateway.com:8443', $notification_url);
 
 $transaction->setNotificationUrl( $notification_url );
 $transaction->setSuccessUrl( _build_return_url(CSalePaySystemAction::GetParamValue("SUCCESS_URL"), $arReturnParams) );
