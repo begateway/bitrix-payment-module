@@ -29,15 +29,19 @@ CSalePaySystemAction::InitParamArrays($arOrder, $arOrder["ID"], '', array(), $pa
 
 \BeGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
 \BeGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
-\BeGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
-\BeGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
+\BeGateway\Settings::$shopPubKey = CSalePaySystemAction::GetParamValue("SHOP_PUBLIC_KEY");
 
-if (!$webhook->isAuthorized()) {
-  _output_message('ERROR: WEBHOOK IS NOT AUTHORIZED');
-}
-
-if (!$webhook->isAuthorized()) {
-  _output_message('ERROR: WEBHOOK IS NOT AUTHORIZED');
+if (isset($_SERVER['CONTENT_SIGNATURE']) && !is_null(\BeGateway\Settings::$shopPubKey)) {
+  $signature = base64_decode($_SERVER['CONTENT_SIGNATURE']);
+  $public_key = "-----BEGIN PUBLIC KEY-----\n". \BeGateway\Settings::$shopPubKey . "\n-----END PUBLIC KEY-----";
+  $key = openssl_pkey_get_public($public_key);
+  if (openssl_verify(file_get_contents('php://input'), $signature, $key, OPENSSL_ALGO_SHA256) != 1) {
+    _output_message('ERROR: WEBHOOK SIGNATURE IS NOT VALID');
+  }
+} else {
+  if (!$webhook->isAuthorized()) {
+    _output_message('ERROR: WEBHOOK IS NOT AUTHORIZED');
+  }
 }
 
 $money = new \BeGateway\Money;
