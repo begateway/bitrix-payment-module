@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  bitrix: &default
+    build: &build
+      context: ./docker
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - mysql
+    tty: true
+    volumes:
+      - ./docker/configs/.settings.php:/var/www/html/.settings.php
+      - ./begateway.payment:/var/www/html/bitrix/modules/begateway.payment
+      - ./begateway.payment/install/sale_payment/begateway:/var/www/html/bitrix/php_interface/include/sale_payment/begateway
+      - ./begateway.payment/install/components/begateway:/var/www/html/bitrix/components/begateway
+
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sitemanager
