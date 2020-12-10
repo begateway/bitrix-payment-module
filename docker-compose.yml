@@ -11,7 +11,7 @@ services:
       - mysql
     tty: true
     volumes:
-      - ./docker/configs/.settings.php:/var/www/html/.settings.php
+      - ./docker/configs/.settings.php:/var/www/html/bitrix/.settings.php
       - ./begateway.payment:/var/www/html/bitrix/modules/begateway.payment
       - ./begateway.payment/install/sale_payment/begateway:/var/www/html/bitrix/php_interface/include/sale_payment/begateway
       - ./begateway.payment/install/components/begateway:/var/www/html/bitrix/components/begateway
