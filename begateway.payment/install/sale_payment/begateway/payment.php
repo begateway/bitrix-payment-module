@@ -12,7 +12,6 @@ Loc::loadMessages(__FILE__);
 
 \BeGateway\Settings::$shopId = CSalePaySystemAction::GetParamValue("SHOP_ID");
 \BeGateway\Settings::$shopKey = CSalePaySystemAction::GetParamValue("SHOP_KEY");
-\BeGateway\Settings::$gatewayBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
 \BeGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
 
 $out_summ = number_format(floatval(strval($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["SHOULD_PAY"])), 2, ".", "");
@@ -21,16 +20,31 @@ $order_id = (strlen(CSalePaySystemAction::GetParamValue("ORDER_ID")) > 0) ? CSal
 $order_id = IntVal($order_id);
 $payment_id = CSalePaySystemAction::GetParamValue("ORDER_PAYMENT_ID");
 $arReturnParams = array('order_id' => $order_id, 'payment_id' => $payment_id);
-
-$form_type = CSalePaySystemAction::GetParamValue("FORM_TYPE");
-$form_type = strlen($form_type) > 0 ? $form_type : 'redirect';
+$description = $APPLICATION->ConvertCharset(Loc::getMessage("SALE_BEGATEWAY_ORDER_ID") . " #" .$order_id, SITE_CHARSET, 'utf-8');
 
 $transaction = new \BeGateway\GetPaymentToken;
+
+if (CSalePaySystemAction::GetParamValue("ENABLE_CREDIT_CARD") == 'Y') {
+  $transaction->addPaymentMethod(new \BeGateway\PaymentMethod\CreditCard);
+}
+
+if (CSalePaySystemAction::GetParamValue("ENABLE_CREDIT_CARD_HALVA") == 'Y') {
+  $transaction->addPaymentMethod(new \BeGateway\PaymentMethod\CreditCardHalva);
+}
+
+if (CSalePaySystemAction::GetParamValue("ENABLE_ERIP") == 'Y') {
+  $erip = new \BeGateway\PaymentMethod\Erip(array(
+    'order_id' => $order_id,
+    'account_number' => StrVal($order_id),
+    'service_info' => array($description)
+  ));
+  $transaction->addPaymentMethod($erip);
+}
 
 $transaction->money->setCurrency($currency);
 $transaction->money->setAmount($out_summ);
 $transaction->setTrackingId($order_id . ":" . $payment_id);
-$transaction->setDescription($APPLICATION->ConvertCharset(Loc::getMessage("SALE_BEGATEWAY_ORDER_ID") . " #" .$order_id, SITE_CHARSET, 'utf-8'));
+$transaction->setDescription($description);
 $transaction->setLanguage(LANGUAGE_ID);
 
 if( CSalePaySystemAction::GetParamValue("TRANSACTION_TYPE") == "authorization" )
@@ -50,7 +64,6 @@ $transaction->setNotificationUrl( $notification_url );
 $transaction->setSuccessUrl( _build_return_url(CSalePaySystemAction::GetParamValue("SUCCESS_URL"), $arReturnParams) );
 $transaction->setDeclineUrl( _build_return_url(CSalePaySystemAction::GetParamValue("DECLINE_URL"), $arReturnParams) );
 $transaction->setFailUrl( _build_return_url(CSalePaySystemAction::GetParamValue("FAIL_URL"), $arReturnParams) );
-$transaction->setCancelUrl( CSalePaySystemAction::GetParamValue("CANCEL_URL") );
 
 $firstName = CSalePaySystemAction::GetParamValue("FIRST_NAME");
 $middleName = CSalePaySystemAction::GetParamValue("MIDDLE_NAME");
@@ -94,36 +107,25 @@ if(!$response->isSuccess())
 
 $_SESSION["token"] = $response->getToken();
 
-if( $form_type == "inline" || $form_type == "overlay" ):
+$domain_gateway = CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
+list($subdomain,$jsdomain) = explode('.', $domain_gateway, 2);
 
-  $domain_gateway = CSalePaySystemAction::GetParamValue("DOMAIN_GATEWAY");
-  list($subdomain,$jsdomain) = explode('.', $domain_gateway, 2);
+$jsurl = 'https://js.' . $jsdomain . '/widget/be_gateway.js';
 
-  $jsurl = 'https://js.' . $jsdomain . '/begateway-1-latest.min.js';
-
-	$GLOBALS["APPLICATION"]->AddHeadScript( $jsurl );
-	$css = CSalePaySystemAction::GetParamValue("FORM_CSS");
-	$id = "begateway-order-" . $order_id;
-	if( $form_type == "overlay" )
-		echo "<button id=\"$id\" >" . Loc::getMessage("SALE_BEGATEWAY_BUY_BUTTON") . "</button>";
-	else
-		echo "<div id=\"$id\"></div>";
+$GLOBALS["APPLICATION"]->AddHeadScript( $jsurl );
 ?>
-	<script type="text/javascript">
-		var options = {
-			type: "<?= $form_type?>",
-			id: "<?= $id?>",
-			url: "<?= $response->getRedirectUrl()?>",
-			style: "<?= $css?>",
-			size: { width: 380, height: 550 }
-		}
-
-		var pf = new BeGateway(options);
-		pf.buildForm();
-	</script>
-<?else:?>
-<form method="GET" action="<?= $response->getRedirectUrlScriptName();?>">
-  <input type="hidden" value="<?= $response->getToken();?>" name="token">
-  <input type="submit" value="<?= Loc::getMessage("SALE_BEGATEWAY_BUY_BUTTON")?>">
-</form>
-<?endif?>
+<div id="begateway-wrapper">
+  <script type="text/javascript">
+    this.payment = function() {
+      var params = {
+        checkout_url: "https://<?= CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE"); ?>",
+        token: "<?= $response->getToken(); ?>",
+        style: {
+          <?= CSalePaySystemAction::GetParamValue("FORM_CSS");?>
+        }
+      };
+      new BeGateway(params).createWidget();
+    };
+  </script>
+  <button class="btn btn-primary" onclick="payment();"><?= Loc::getMessage("SALE_BEGATEWAY_BUY_BUTTON"); ?></button>
+</div>
