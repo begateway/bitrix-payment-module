@@ -57,7 +57,8 @@ if(isset($webhook->getResponse()->transaction->three_d_secure_verification->pa_s
 
 $arFields = array(
   "PS_STATUS" => ($webhook->isSuccess() ? "Y" : "N"),
-  "PS_INVOICE_ID" => $webhook->getUid(),
+  # glue uid with saved payment token data
+  "PS_INVOICE_ID" => implode(':', array($webhook->getUid(), $arOrder['PS_INVOICE_ID'])),
   "PS_STATUS_DESCRIPTION" => implode("\n",$message),
   "PS_SUM" => $money->getAmount(),
   "PS_CURRENCY" => $money->getCurrency(),

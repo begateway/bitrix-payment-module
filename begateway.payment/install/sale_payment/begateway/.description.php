@@ -22,6 +22,14 @@ $arPSCorrespondence = array(
         'SORT' => 320,
 				"TYPE" => ""
 			),
+		"SHOP_PUBLIC_KEY" => array(
+				"NAME" => GetMessage("SALE_BEGATEWAY_SHOP_PUBLIC_KEY_NAME"),
+				"DESCR" => GetMessage("SALE_BEGATEWAY_SHOP_PUBLIC_KEY_DESC"),
+				"VALUE" => "",
+        'GROUP' => 'PAYMENT',
+        'SORT' => 321,
+				"TYPE" => ""
+			),
 		"DOMAIN_GATEWAY" => array(
 				"NAME" => GetMessage("SALE_BEGATEWAY_DOMAIN_GATEWAY_NAME"),
 				"DESCR" => GetMessage("SALE_BEGATEWAY_DOMAIN_GATEWAY_DESC"),
@@ -77,14 +85,6 @@ $arPSCorrespondence = array(
         'SORT' => 380,
 				"TYPE" => ""
 			),
-    "CANCEL_URL" => array(
-				"NAME" => GetMessage("SALE_BEGATEWAY_CANCEL_URL_NAME"),
-				"DESCR" => GetMessage("SALE_BEGATEWAY_CANCEL_URL_DESC"),
-				"VALUE" => "http://www.yoursite.com/personal/order/",
-        'GROUP' => 'PAYMENT',
-        'SORT' => 390,
-				"TYPE" => ""
-			),
     "NOTIFICATION_URL" => array(
         "NAME" => GetMessage("SALE_BEGATEWAY_NOTIFICATION_URL_NAME"),
         "DESCR" => GetMessage("SALE_BEGATEWAY_NOTIFICATION_URL_DESC"),
@@ -93,30 +93,57 @@ $arPSCorrespondence = array(
         'SORT' => 400,
         "TYPE" => ""
       ),
-    "FORM_TYPE" => array(
-        "NAME" => GetMessage("SALE_BEGATEWAY_FORM_TYPE_NAME"),
-        "DESCR" => GetMessage("SALE_BEGATEWAY_FORM_TYPE_DESCR"),
+		"ENABLE_CREDIT_CARD" => array(
+				"NAME" => GetMessage("SALE_BEGATEWAY_ENABLE_CREDIT_CARD_NAME"),
+				"DESCR" => GetMessage("SALE_BEGATEWAY_ENABLE_CREDIT_CARD_DESC"),
         "TYPE" => "SELECT",
         'GROUP' => 'PAYMENT',
         'SORT' => 410,
         "VALUE" => array(
-          "redirect" => array(
-            "NAME" => GetMessage("SALE_BEGATEWAY_FORM_TYPE_REDIRECT_NAME")
+          "Y" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_YES")
           ),
-          "inline" => array(
-            "NAME" => GetMessage("SALE_BEGATEWAY_FORM_TYPE_INLINE_NAME")
-          ),
-          "overlay" => array(
-            "NAME" => GetMessage("SALE_BEGATEWAY_FORM_TYPE_OVERLAY_NAME")
+          "N" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_NO")
           )
         )
-      ),
+			),
+		"ENABLE_CREDIT_CARD_HALVA" => array(
+				"NAME" => GetMessage("SALE_BEGATEWAY_ENABLE_CREDIT_CARD_HALVA_NAME"),
+				"DESCR" => GetMessage("SALE_BEGATEWAY_ENABLE_CREDIT_CARD_HALVA_DESC"),
+        "TYPE" => "SELECT",
+        'GROUP' => 'PAYMENT',
+        'SORT' => 411,
+        "VALUE" => array(
+          "Y" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_YES")
+          ),
+          "N" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_NO")
+          )
+        )
+			),
+		"ENABLE_ERIP" => array(
+				"NAME" => GetMessage("SALE_BEGATEWAY_ENABLE_ERIP_NAME"),
+				"DESCR" => GetMessage("SALE_BEGATEWAY_ENABLE_ERIP_DESC"),
+        "TYPE" => "SELECT",
+        'GROUP' => 'PAYMENT',
+        'SORT' => 412,
+        "VALUE" => array(
+          "Y" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_YES")
+          ),
+          "N" => array(
+            "NAME" => GetMessage("SALE_BEGATEWAY_NO")
+          )
+        )
+			),
     "FORM_CSS" => array(
         "NAME" => GetMessage("SALE_BEGATEWAY_CSS_FORM_NAME"),
         "DESCR" => GetMessage("SALE_BEGATEWAY_CSS_FORM_DESC"),
         "VALUE" => "",
         'GROUP' => 'PAYMENT',
-        'SORT' => 415,
+        'SORT' => 419,
         "TYPE" => ""
       ),
 		"TESTMODE" => array(
@@ -127,10 +154,10 @@ $arPSCorrespondence = array(
         'SORT' => 420,
         "VALUE" => array(
           "Y" => array(
-            "NAME" => GetMessage("SALE_BEGATEWAY_DEMO_YES")
+            "NAME" => GetMessage("SALE_BEGATEWAY_YES")
           ),
           "N" => array(
-            "NAME" => GetMessage("SALE_BEGATEWAY_DEMO_NO")
+            "NAME" => GetMessage("SALE_BEGATEWAY_NO")
           )
         )
 			),

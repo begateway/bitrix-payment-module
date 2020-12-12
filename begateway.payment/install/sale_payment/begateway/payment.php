@@ -105,6 +105,14 @@ if(!$response->isSuccess())
   die;
 }
 
+# save payment token data for result.php
+CSaleOrder::Update(
+  $order_id,
+  array(
+    "PS_INVOICE_ID" => $response->getToken()
+  )
+);
+
 $_SESSION["token"] = $response->getToken();
 
 $domain_gateway = CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
