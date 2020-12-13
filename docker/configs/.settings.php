@@ -10,8 +10,8 @@ return [
   [
     'value' =>
     [
-      'config_options' => 3600.0,
-      'site_domain' => 3600.0,
+      'config_options' => 120,
+      'site_domain' => 120,
     ],
     'readonly' => false,
   ],
@@ -45,7 +45,7 @@ return [
       'default' =>
       [
         'className' => '\\Bitrix\\Main\\DB\\MysqliConnection',
-        'host' => 'db',
+        'host' => 'mysql',
         'database' => 'sitemanager',
         'login' => 'root',
         'password' => 'root',

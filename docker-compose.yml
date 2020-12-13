@@ -12,9 +12,9 @@ services:
     tty: true
     volumes:
       - ./docker/configs/.settings.php:/var/www/html/bitrix/.settings.php
+      - ./docker/configs/dbconn.php:/var/www/html/bitrix/php_interface/dbconn.php
       - ./begateway.payment:/var/www/html/bitrix/modules/begateway.payment
       - ./begateway.payment/install/sale_payment/begateway:/var/www/html/bitrix/php_interface/include/sale_payment/begateway
-      - ./begateway.payment/install/components/begateway:/var/www/html/bitrix/components/begateway
 
   mysql:
     image: mysql:8.0
