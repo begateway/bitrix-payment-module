@@ -55,10 +55,15 @@ if(isset($webhook->getResponse()->transaction->three_d_secure_verification->pa_s
   $message[] = "3-D Secure: " .$webhook->getResponse()->transaction->three_d_secure_verification->pa_status;
 }
 
+# save payment token data for result.php
+$order = \Bitrix\Sale\Order::load($order_id);
+$paymentCollection = $order->getPaymentCollection();
+$payment = $paymentCollection->getItemById($payment_id);
+
 $arFields = array(
   "PS_STATUS" => ($webhook->isSuccess() ? "Y" : "N"),
   # glue uid with saved payment token data
-  "PS_INVOICE_ID" => implode(':', array($webhook->getUid(), $arOrder['PS_INVOICE_ID'])),
+  "PS_INVOICE_ID" => implode(':', array($webhook->getUid(), $payment->getField('PS_INVOICE_ID'))),
   "PS_STATUS_DESCRIPTION" => implode("\n",$message),
   "PS_SUM" => $money->getAmount(),
   "PS_CURRENCY" => $money->getCurrency(),
