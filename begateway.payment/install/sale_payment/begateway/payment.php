@@ -1,4 +1,6 @@
 <?if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();?><?
+Bitrix\Main\Loader::includeModule('sale');
+
 use Bitrix\Main\Localization\Loc;
 require_once dirname(__FILE__) . '/common.php';
 
@@ -106,12 +108,11 @@ if(!$response->isSuccess())
 }
 
 # save payment token data for result.php
-CSaleOrder::Update(
-  $order_id,
-  array(
-    "PS_INVOICE_ID" => $response->getToken()
-  )
-);
+$order = \Bitrix\Sale\Order::load($order_id);
+$paymentCollection = $order->getPaymentCollection();
+$payment = $paymentCollection->getItemById($payment_id);
+$payment->setField('PS_INVOICE_ID', $response->getToken());
+$order->save();
 
 $_SESSION["token"] = $response->getToken();
 
@@ -120,9 +121,9 @@ list($subdomain,$jsdomain) = explode('.', $domain_gateway, 2);
 
 $jsurl = 'https://js.' . $jsdomain . '/widget/be_gateway.js';
 
-$GLOBALS["APPLICATION"]->AddHeadScript( $jsurl );
 ?>
 <div id="begateway-wrapper">
+  <script src="<?= $jsurl ?>"></script>
   <script type="text/javascript">
     this.payment = function() {
       var params = {
