@@ -1,5 +1,6 @@
 <?
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+Bitrix\Main\Loader::includeModule('sale');
 
 use Bitrix\Sale\Order;
 use Bitrix\Main\Localization\Loc;
@@ -20,38 +21,45 @@ CSalePaySystemAction::InitParamArrays($arOrder, $arOrder["ID"], '', array(), $pa
 \BeGateway\Settings::$checkoutBase = "https://" . CSalePaySystemAction::GetParamValue("DOMAIN_PAYMENT_PAGE");
 
 try {
-  if (is_null($arOrder)) {
-  	throw new Exception( Loc::getMessage("SALE_BEGATEWAY_FAIL_TOKEN_QUERY") );
-  }
+  if (!$order)
+    return false;
 
-  list($uid, $token) = explode(':', $arOrder['PS_INVOICE_ID']);
+  $paymentCollection = $order->getPaymentCollection();
+  $payment = $paymentCollection->getItemById($payment_id);
 
-  if (is_null($token)) {
-  	throw new Exception( Loc::getMessage("SALE_BEGATEWAY_FAIL_TOKEN_QUERY") );
-  }
+  $token = $payment->getField('PS_INVOICE_ID');
+
+  if (is_null($token))
+    return false;
 
   $query = new \beGateway\QueryByPaymentToken();
   $query->setToken($token);
-  $response = $query->submit()->getResponse();
+  $response = $query->submit();
+  $arResponse = $response->getResponseArray();
+  $response = $response->getResponse();
 
-  if( ! isset( $response->checkout ) )
-  	throw new Exception( Loc::getMessage("SALE_BEGATEWAY_FAIL_TOKEN_QUERY") );
+  if(!isset($response->checkout))
+    return false;
 
   if ($response->checkout->order->tracking_id != $order_id . ':' . $payment_id)
-  	throw new Exception( Loc::getMessage("SALE_BEGATEWAY_WRONG_TRACKING_ID") );
+    return false;
 
   $money = new \BeGateway\Money;
   $money->setCents($response->checkout->order->amount);
   $money->setCurrency($response->checkout->order->currency);
 
   if ($response && $response->checkout->status == 'successful') {
+    $transaction_type = $arResponse['checkout']['transaction_type'];
+    $uid = $arResponse['checkout']['gateway_response'][$transaction_type]['uid'];
+    $paid_at = $arResponse['checkout']['gateway_response'][$transaction_type]['paid_at'];
+
     $message = array();
-    $message []= Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_UID") . ' ' . $response->checkout->gateway_response->uid. ". " . Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_TIME") . ' ' . $response->checkout->gateway_response->paid_at;
+    $message []= Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_UID") . ' ' . $uid . ". " . Loc::getMessage("SALE_BEGATEWAY_STATUS_MESSAGE_TIME") . ' ' . $paid_at;
 
     $arFields = array(
       "PS_STATUS" => "Y",
       "PS_STATUS_DESCRIPTION" => implode("\n",$message),
-      "PS_INVOICE_ID" => implode(':', array($response->checkout->gateway_response->uid, $arOrder['PS_INVOICE_ID'])),
+      "PS_INVOICE_ID" => implode(':', array($uid, $token)),
       "PS_SUM" => $money->getAmount(),
       "PS_CURRENCY" => $money->getCurrency(),
       "PS_RESPONSE_DATE" => new \Bitrix\Main\Type\DateTime(),
