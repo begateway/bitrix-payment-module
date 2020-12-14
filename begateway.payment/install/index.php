@@ -52,16 +52,10 @@ class begateway_payment extends CModule {
       $_SERVER["DOCUMENT_ROOT"]."/bitrix/php_interface/include/sale_payment",
       true, true
     );
-    CopyDirFiles(
-      $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/".$this->MODULE_ID."/install/components/",
-      $_SERVER["DOCUMENT_ROOT"]."/bitrix/components/",
-      true, true
-    );
     return true;
   }
 
   public function uninstallFiles() {
-    DeleteDirFilesEx("/bitrix/components/".$this->MODULE_ID);
     DeleteDirFilesEx("/bitrix/php_interface/include/sale_payment/begateway");
     return true;
   }
