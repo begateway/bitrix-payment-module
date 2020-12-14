@@ -19,8 +19,8 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/* && \
     /usr/sbin/a2enmod rewrite
 
-ADD business_encode.tar.gz /var/www/html/
-#ADD https://www.1c-bitrix.ru/download/business_encode.tar.gz /var/www/html/
+#ADD business_encode.tar.gz /var/www/html/
+ADD https://www.1c-bitrix.ru/download/business_encode.tar.gz /var/www/html/
 
 ADD ./configs/php_bitrix.ini /usr/local/etc/php/conf.d/
 
